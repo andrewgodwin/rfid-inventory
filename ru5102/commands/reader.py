@@ -1,7 +1,7 @@
 import struct
 
 from .base import Command, Response
-from ..constants import COMMAND, STATUS
+from ..constants import COMMAND, STATUS, REGIONS
 from ..exceptions import NoTagError
 
 
@@ -12,25 +12,43 @@ class ReaderInformationResponse(Response):
 
     symbol = COMMAND.GET_READER_INFORMATION
 
+    region_codes = {
+        0b0000: "user",
+        0b0001: "china",
+        0b0010: "usa",
+        0b0011: "korea",
+    }
+
     def decode_data(self):
-        (
-            self.major_version,
-            self.minor_version,
-            self.reader_type,
-            self.protocol_type,
-            max_frequency_byte,
-            min_frequency_byte,
-            self.power,
-            self.scan_time,
-        ) = struct.unpack("<BBBBBBBB", self.data)
+        self.major_version, self.minor_version, reader_type, protocol_type = struct.unpack("<BBBB", self.data[:4])
+        if reader_type == 0x08:
+            self.reader_type = "ru5102"
+            max_frequency_byte, min_frequency_byte, self.power, self.scan_time = struct.unpack("<BBBB", self.data[4:])
+            max_frequency = 0b00111111 & max_frequency_byte
+            min_frequency = 0b00111111 & min_frequency_byte
+            region_code = ((max_frequency_byte >> 6) << 2) | (min_frequency_byte >> 2)
+            for region_name, region_details in REGIONS.items():
+                if region_details["code"] == region_code:
+                    self.region = region_name
+                    self.min_frequency = region_details["base"] + (region_details["step"] * min_frequency)
+                    self.max_frequency = region_details["base"] + (region_details["step"] * max_frequency)
+                    break
+            else:
+                raise RuntimeError("Unknown region code %02x" % region_code)
+        else:
+            raise RuntimeError("Unknown reader model %02x" % reader_type)
 
     def __repr__(self):
-        return "<%s version:%s.%s power:%s scantime:%s>" % (
+        return "<%s %s version:%s.%s power:%s scantime:%s freq:%s-%s (%s)>" % (
             self.__class__.__name__,
+            self.reader_type,
             self.major_version,
             self.minor_version,
             self.power,
             self.scan_time,
+            self.min_frequency,
+            self.max_frequency,
+            self.region,
         )
 
 

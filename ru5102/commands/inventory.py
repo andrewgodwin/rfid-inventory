@@ -23,6 +23,7 @@ class Inventory(Command):
             # Get raw data
             address, command, status, data = reader.receive_raw()
             assert status in (STATUS.INVENTORY_OK, STATUS.INVENTORY_TIMEOUT)
+            # TODO: Handle the case where there's extra response messages with more tags
             # Decode tags
             number_of_tags = struct.unpack("<B", data[:1])[0]
             data = data[1:]

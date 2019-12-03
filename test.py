@@ -11,7 +11,5 @@ print("")
 
 while True:
     response = reader.run(commands.Inventory())
-    print(response)
     seen_tags.update(response.tags)
-    print("Seen: %i tags" % (len(seen_tags)))
-    time.sleep(1)
+    print("\rSeen: %i tags" % (len(seen_tags)), end="", flush=True)

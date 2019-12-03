@@ -44,3 +44,26 @@ class STATUS:
     ERROR_COMMAND_LENGTH = 0xfd
     ERROR_ILLEGAL_COMMAND = 0xfe
     ERROR_PARAMETER = 0xff
+
+REGIONS = {
+    "user": {
+        "code": 0b0000,
+        "base": 902.6,
+        "step": 0.4,
+    },
+    "china": {
+        "code": 0b0001,
+        "base": 920.125,
+        "step": 0.25,
+    },
+    "usa": {
+        "code": 0b0010,
+        "base": 902.75,
+        "step": 0.5,
+    },
+    "korea": {
+        "code": 0b0011,
+        "base": 917.1,
+        "step": 0.2,
+    },
+}
