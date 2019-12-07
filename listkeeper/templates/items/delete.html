@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+    <h1>Deleting: {{ item.name }}</h1>
+
+    <section>
+        <form action="." method="POST" class="delete delete-item">
+            {% csrf_token %}
+            <p class="delete-warning">
+                Are you sure you want to delete {{ item.name }} (ID {{ item.id }})?
+            </p>
+            <a class="button cancel" href="{{ item.urls.view }}">Cancel</a>
+            <button class="dangerous">Delete</button>
+        </form>
+    </section>
+
+{% endblock content %}

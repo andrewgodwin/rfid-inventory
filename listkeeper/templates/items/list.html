@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    <nav class="sub">
+        <a href="/items/create/"><i class="fa fa-plus-square" aria-hidden="true"></i> Create Item</a>
+    </nav>
+
+    <section class="items">
+        {% for item in items %}
+            <div class="item"><a href="{{ item.urls.view }}">{{ item }}</div>
+        {% empty %}
+            <div class="item empty">No items yet.</div>
+        {% endfor %}
+    </section>
+
+{% endblock content %}

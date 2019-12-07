@@ -1,5 +1,7 @@
 import uuid
 
+import urlman
+
 from django.db import models
 
 
@@ -36,8 +38,11 @@ class Item(models.Model):
     A physical item, with zero or more tags on it.
     """
 
-    name = models.CharField(max_length=255)
-    serial = models.TextField(blank=True)
+    name = models.CharField(max_length=255, help_text="Unique-ish name of the item")
+    description = models.TextField(blank=True, help_text="General item description")
+    serial = models.TextField(
+        blank=True, help_text="Item serial number/other unique ID"
+    )
     notes = models.TextField(blank=True)
 
     created = models.DateTimeField(auto_now_add=True)
@@ -55,6 +60,27 @@ class Item(models.Model):
 
     def __str__(self):
         return "%s: %s" % (self.id, self.name)
+
+    def get_absolute_url(self):
+        return self.urls.view
+
+    class urls(urlman.Urls):
+        base = "/items/"
+        view = "{base}{self.id}/"
+        edit = "{view}edit/"
+        delete = "{view}delete/"
+
+
+class ItemImage(models.Model):
+    """
+    Images of an item. They have an order; the first one is considered primary.
+    """
+
+    item = models.ForeignKey(
+        "directory.Item", related_name="images", on_delete=models.CASCADE
+    )
+    image = models.ImageField(upload_to="items/images/%Y%m/")
+    order = models.IntegerField(default=0)
 
 
 class Label(models.Model):

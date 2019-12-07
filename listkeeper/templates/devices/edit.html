@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+    <h1>Editing: {{ device.name }} <small>Device #{{ device.id }}</small></h1>
+
+    <section>
+        <form action="." method="POST" class="edit edit-device">
+            {{ form|crispy }}
+            {% csrf_token %}
+            <button>Save</button>
+        </form>
+    </section>
+
+{% endblock content %}

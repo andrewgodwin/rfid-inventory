@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    <nav class="sub">
+        <a href="/devices/create/"><i class="fa fa-plus-square" aria-hidden="true"></i> Create Device</a>
+    </nav>
+
+    {% for device in devices %}
+        <div class="device"><a href="{{ device.urls.view }}">{{ device }}</a></div>
+    {% empty %}
+        <div class="device empty">No devices yet.</div>
+    {% endfor %}
+
+{% endblock content %}

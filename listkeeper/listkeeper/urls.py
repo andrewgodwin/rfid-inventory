@@ -16,10 +16,21 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from directory.views import api
+from directory.views import items
+from devices import api, views as devices
 
 urlpatterns = [
-    path("api/tag/<str:tag_id>/", api.tag_get),
-    path("api/tag/<str:tag_id>/seen/<str:location_id>/", api.tag_seen),
+    path("", items.index),
+    path("items/", items.ListItems.as_view()),
+    path("items/create/", items.CreateItem.as_view()),
+    path("items/<int:pk>/", items.ViewItem.as_view()),
+    path("items/<int:pk>/edit/", items.EditItem.as_view()),
+    path("items/<int:pk>/delete/", items.DeleteItem.as_view()),
+    path("devices/", devices.ListDevices.as_view()),
+    path("devices/create/", devices.CreateDevice.as_view()),
+    path("devices/<int:pk>/", devices.ViewDevice.as_view()),
+    path("devices/<int:pk>/edit/", devices.EditDevice.as_view()),
+    path("devices/<int:pk>/delete/", devices.DeleteDevice.as_view()),
+    path("api/device/sync/", api.sync),
     path("admin/", admin.site.urls),
 ]

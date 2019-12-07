@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% load humanize %}
+{% load static %}
+
+{% block extra_head %}
+    <script defer src="{% static "js/device_view.js" %}"></script>
+{% endblock %}
+
+{% block content %}
+
+    <h1>{{ device.name }} <small>Device #{{ device.id }}</small></h1>
+
+    <nav class="sub sub-light">
+        <a href="#"><i class="fa fa-arrow-right" aria-hidden="true"></i> Set Mode</a>
+        <a href="{{ device.urls.delete }}" class="right dangerous"><i class="fa fa-trash" aria-hidden="true"></i> Delete</a>
+        <a href="{{ device.urls.edit }}" class="right"><i class="fa fa-pencil" aria-hidden="true"></i> Edit</a>
+    </nav>
+
+    <section id="recent-reads">
+        <h2>Recently Seen Tags</h2>
+        {% for read in device.recent_reads %}
+            <div class="recent-read">
+                {% if read.directory_tag %}
+                    <a href="{{ read.directory_tag.item.urls.view }}">{{ read.directory_tag.item.name }} <small>{{ read.tag }}</small></a>
+                {% else %}
+                    <a href="/items/create/?tag={{ read.tag }}">{{ read.tag }} <small>(no item)</small></a>
+                {% endif %}
+                {% if read.present %}
+                    <span class="present">
+                        <i class="fa fa-check" aria-hidden="true"></i> Present
+                        <small>{{ read.last_seen|naturaltime }}</small>
+                    </span>
+                {% else %}
+                    <span class="not-present">
+                        <i class="fa fa-times" aria-hidden="true"></i> Not Present
+                        <small>Seen {{ read.last_seen|naturaltime }}</small>
+                    </span>
+                {% endif %}
+            </div>
+        {% endfor %}
+    </section>
+
+    <section id="api-details">
+        <h2>API Details</h2>
+        <p>
+            Token:
+            <span class="token-placeholder" v-if="!tokenVisible" v-on:click="showToken">click to show</span>
+            <span class="token" v-if="tokenVisible">{{ device.token }}</span>
+        </p>
+    </section>
+
+{% endblock content %}

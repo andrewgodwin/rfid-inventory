@@ -1,0 +1,225 @@
+/* General styles */
+
+body {
+    font-family: 'Roboto', sans-serif;
+}
+
+a {
+    text-decoration: none;
+    color: #4193B2;
+}
+
+
+/* Specific styles */
+/* #4a4e4d • #12919D • #3da4ab • #f6cd61 • #fe8a71 */
+
+
+header {
+    height: 40px;
+    background: #4a4e4d    ;
+    color: #ffffff;
+}
+    header .logo {
+        display: block;
+        float: right;
+        line-height: 40px;
+        text-decoration: none;
+        color: #ffffff;
+        text-align: right;
+        padding: 0 10px 0 0;
+        font-size: 120%;
+    }
+    header nav {
+        margin: 0 0 0 15px;
+    }
+    header nav a {
+        display: inline-block;
+        line-height: 20px;
+        text-align: center;
+        font-weight: 600;
+        text-transform: uppercase;
+        color: #ffffff;
+        padding: 6px 1px 3px 1px;
+        border-top: 4px solid #4a4e4d;
+        margin: 0 20px 0 0px;
+    }
+    header nav a:hover {
+        border-top: 4px solid #3da4ab;
+    }
+    header nav a.selected,
+    header nav a.selected:hover {
+        border-top: 4px solid #3da4ab;
+    }
+
+h1 {
+    background: #12919D;
+    font-size: 30px;
+    color: rgba(255, 255, 255, 1);
+    padding: 10px 15px;
+    margin: 0;
+}
+    h1 small {
+        font-size: 50%;
+        color: rgba(255, 255, 255, 0.6);
+        margin: 0 0 0 0.5em;
+    }
+
+nav.sub {
+    background: #3da4ab;
+    height: 36px;
+    line-height: 30px;
+    color: rgba(255, 255, 255, 0.7);
+    padding: 0 7px;
+    overflow: none;
+}
+    nav.sub a {
+        color: rgba(255, 255, 255, 0.7);
+        float: left;
+        padding: 0px 8px;
+        margin: 3px 10px 0 0;
+        border-radius: 3px;
+    }
+    nav.sub a.right {
+        float: right;
+        margin: 3px 0 0 10px;
+    }
+    nav.sub a:hover {
+        color: rgba(255, 255, 255, 1);
+        background: rgba(255, 255, 255, 0.2);
+    }
+    nav.sub a.dangerous:hover {
+        color: rgba(255, 255, 255, 1);
+        background: #fe8a71;
+    }
+
+section {
+    display: inline-block;
+    vertical-align: top;
+    width: 400px;
+    padding: 10px 15px;
+}
+    section h2 {
+        color: #12919D;
+        font-weight: bold;
+        font-size: 110%;
+        padding: 0 0 4px 0;
+        margin: 0 0 6px 0;
+        border-bottom: 1px solid #9FA5A4;
+    }
+
+.empty {
+    font-style: italic;
+    color: #666;
+}
+
+/* Items */
+
+.item {
+    padding: 10px 15px;
+}
+
+#details {
+}
+    #details dt {
+        font-size: 80%;
+        color: #778;
+        margin: 0 0 3px 0;
+    }
+    #details dd {
+        margin: 0 0 10px 0;
+    }
+
+/* Devices */
+
+.device {
+    padding: 10px 15px;
+}
+
+.token {
+    padding: 3px 5px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+}
+    .token-placeholder {
+        background: #ccc;
+        color: #fff;
+        border-radius: 3px;
+        padding: 3px 100px;
+        cursor: pointer;
+    }
+
+.recent-read {
+    display: block;
+    height: 3em;
+    overflow: hidden;
+}
+    .recent-read a {
+        float: left;
+    }
+    .recent-read a:hover {
+        text-decoration: underline;
+    }
+    .recent-read small {
+        display: block;
+        margin: 4px 0 0 0;
+        color: #778;
+    }
+    .recent-read .present,
+    .recent-read .not-present {
+        float: right;
+        color: #3da4ab;
+        text-align: right;
+    }
+    .recent-read .not-present {
+        color: #fe8a71;
+    }
+
+
+/* Forms */
+
+form {
+    width: 600px;
+}
+    form .control-group {
+        margin: 0 0 15px 0;
+    }
+    form label {
+        color: #0e9aa7;
+        font-weight: bold;
+    }
+    form label .asteriskField {
+        padding-left: 3px;
+        color: #fe8a71;
+    }
+    form .controls {
+        margin: 5px 0 0 0;
+    }
+    form .controls .help-block {
+        margin: 3px 0 0 0;
+        font-size: 80%;
+        color: rgba(0, 0, 0, 0.7);
+    }
+    form input {
+        font-size: 120%;
+        width: 100%;
+        padding: 5px;
+    }
+    form textarea {
+        font-size: 100%;
+        font-family: inherit;
+        width: 100%;
+        padding: 5px;
+        line-height: 115%;
+    }
+    form button,
+    form .button {
+        background: #3da4ab;
+        color: #fff;
+        padding: 7px 12px;
+        border: none;
+        border-radius: 3px;
+        cursor: pointer;
+    }
+    form button.dangerous {
+        background: #fe8a71;
+    }

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{% block title %}{% endblock %}Listkeeper</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+    {% load static %}
+
+    <link rel="stylesheet" href="/static/css/normalize.css" type="text/css" />
+    <link rel="stylesheet" href="/static/css/style.css" type="text/css" media="screen" />
+
+    <link href="https://fonts.googleapis.com/css?family=Roboto&amp;display=swap" rel="stylesheet">
+    <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    {% block extra_head %}{% endblock %}
+</head>
+<body class="section-{{ section }}">
+
+    <header>
+        <a href="/" class="logo"><b>rfid</b> inventory</a>
+        <nav>
+            <a href="/items/"{% if section == "items" %} class="selected"{% endif %}>Items</a>
+            <a href="/locations/"{% if section == "locations" %} class="selected"{% endif %}>Locations</a>
+            <a href="/devices/"{% if section == "devices" %} class="selected"{% endif %}>Devices</a>
+        </nav>
+    </header>
+
+    {% block raw_content %}
+    <div class="content">
+        {% block content %}
+        {% endblock %}
+        <div class="clearfix"></div>
+    </div>
+    {% endblock %}
+
+</body>
+</html>
