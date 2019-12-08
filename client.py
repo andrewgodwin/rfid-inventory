@@ -25,6 +25,7 @@ def main(serial_port, url, token):
     print(reader.run(commands.GetReaderInformation()))
     # Main detection loop
     while True:
+        time.sleep(0.1)
         response = reader.run(commands.Inventory())
         seen_tags.update(["epc:%s" % tag for tag in response.tags])
         # If it's been enough time, update the server with what happened

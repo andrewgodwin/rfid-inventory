@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block title %}Deleting {{ location.name }} - {% endblock %}
+
+{% block content %}
+
+    <h1>Deleting: {{ location.name }}</h1>
+
+    <section>
+        <form action="." method="POST" class="delete delete-location">
+            {% csrf_token %}
+            <p class="delete-warning">
+                Are you sure you want to delete {{ location.name }} (ID {{ location.id }})?
+            </p>
+            <a class="button cancel" href="{{ location.urls.view }}">Cancel</a>
+            <button class="dangerous">Delete</button>
+        </form>
+    </section>
+
+{% endblock content %}

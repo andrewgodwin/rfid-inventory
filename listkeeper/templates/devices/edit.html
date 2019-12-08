@@ -9,6 +9,7 @@
         <form action="." method="POST" class="edit edit-device">
             {{ form|crispy }}
             {% csrf_token %}
+            <a class="button cancel" href="{{ device.urls.view }}">Cancel</a>
             <button>Save</button>
         </form>
     </section>

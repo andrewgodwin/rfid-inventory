@@ -8,7 +8,7 @@ from django.views.generic import (
 )
 
 from ..models import Item
-from ..forms import CreateItemForm
+from ..forms import CreateItemForm, EditItemForm
 
 
 def index(request):
@@ -16,7 +16,7 @@ def index(request):
 
 
 class ListItems(ListView):
-    queryset = Item.objects.order_by("name")
+    queryset = Item.objects.select_related("location").order_by("name")
     template_name = "items/list.html"
     context_object_name = "items"
     extra_context = {"section": "items"}
@@ -30,7 +30,7 @@ class ViewItem(DetailView):
 
 class EditItem(UpdateView):
     model = Item
-    fields = ["name", "description", "serial", "notes"]
+    form_class = EditItemForm
     template_name = "items/edit.html"
     extra_context = {"section": "items"}
 

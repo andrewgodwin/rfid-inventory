@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block title %}Reparent Locations - {% endblock %}
+
+{% block content %}
+
+    <h1>Reparent Locations</h1>
+
+    <section>
+        <form action="." method="POST" class="reparent reparent-location">
+            {% if confirming %}
+                <p>Please confirm the reparenting operation. Affected locations are shown below.</p>
+                {% for old, new in renames %}
+                    <p><span class="old">{{ old }}</span> &rarr; <span class="new">{{ new }}</span></p>
+                {% endfor %}
+                <div style="display: none">
+                <input type="hidden" name="confirmed" value="1" />
+            {% else %}
+                <p>This tool allows you to re-parent one location (and all its children) to a different location.</p>
+            {% endif %}
+            {{ form|crispy }}
+            {% csrf_token %}
+            {% if confirming %}
+                </div>
+            {% endif %}
+            <a class="button cancel" href="javascript:history.back()">Cancel</a>
+            <button>Reparent</button>
+        </form>
+    </section>
+
+{% endblock content %}

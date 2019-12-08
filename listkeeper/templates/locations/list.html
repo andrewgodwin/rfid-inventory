@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block title %}Locations - {% endblock %}
+
+{% block content %}
+
+    <nav class="sub">
+        <a href="/locations/create/"><i class="fa fa-plus-square" aria-hidden="true"></i> Create Location</a>
+        <a href="/locations/reparent/"><i class="fa fa-sitemap" aria-hidden="true"></i> Reparent</a>
+    </nav>
+
+    {% for location in locations %}
+        <div class="location">
+            <a href="{{ location.urls.view }}">{{ location }}</a>
+            <small>{{ location.items_count }} item{{ location.items_count|pluralize }}</small>
+        </div>
+    {% empty %}
+        <div class="location empty">No locations yet.</div>
+    {% endfor %}
+
+{% endblock content %}

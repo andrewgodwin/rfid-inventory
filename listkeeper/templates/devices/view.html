@@ -21,8 +21,8 @@
         <h2>Recently Seen Tags</h2>
         {% for read in device.recent_reads %}
             <div class="recent-read">
-                {% if read.directory_tag %}
-                    <a href="{{ read.directory_tag.item.urls.view }}">{{ read.directory_tag.item.name }} <small>{{ read.tag }}</small></a>
+                {% if read.item %}
+                    <a href="{{ read.item.urls.view }}">{{ read.item.name }} <small>{{ read.tag }}</small></a>
                 {% else %}
                     <a href="/items/create/?tag={{ read.tag }}">{{ read.tag }} <small>(no item)</small></a>
                 {% endif %}
@@ -41,13 +41,33 @@
         {% endfor %}
     </section>
 
-    <section id="api-details">
-        <h2>API Details</h2>
-        <p>
-            Token:
-            <span class="token-placeholder" v-if="!tokenVisible" v-on:click="showToken">click to show</span>
-            <span class="token" v-if="tokenVisible">{{ device.token }}</span>
-        </p>
+    <section id="details">
+        <h2>Details</h2>
+        <dl>
+            <dt>Last Seen</dt>
+            <dd>
+                {% if device.last_seen %}
+                    {{ device.last_seen|naturaltime }}
+                {% else %}
+                    Never
+                {% endif %}
+            </dd>
+            {% if device.type %}
+                <dt>Type</dt>
+                <dd>{{ device.type }}</dd>
+            {% endif %}
+            {% if device.notes %}
+                <dt>Notes</dt>
+                <dd>{{ device.notes }}</dd>
+            {% endif %}
+            {% if device.token %}
+                <dt>API Token</dt>
+                <dd class="token">
+                    <span class="token-placeholder" v-if="!tokenVisible" v-on:click="showToken">click to show</span>
+                    <span class="token" v-if="tokenVisible">{{ device.token }}</span>
+                </dd>
+            {% endif %}
+        </dl>
     </section>
 
 {% endblock content %}

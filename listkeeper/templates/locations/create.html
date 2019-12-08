@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block title %}Create Location - {% endblock %}
+
+{% block content %}
+
+    <h1>Create Location</h1>
+
+    <section>
+        <form action="." method="POST" class="create create-location">
+            {{ form|crispy }}
+            {% csrf_token %}
+            <div class="buttons">
+                <button name="add-another">Create &amp; Add Another</button>
+                <button>Create</button>
+            </div>
+        </form>
+    </section>
+
+{% endblock content %}

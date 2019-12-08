@@ -92,11 +92,33 @@ nav.sub {
         background: #fe8a71;
     }
 
+ul.messages {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    min-width: 400px;
+    max-width: 75%;
+    margin: 0;
+    box-sizing: border-box;
+    list-style-type: none;
+}
+    ul.messages li {
+        margin: 2px 0 0 0;
+        padding: 15px 15px;
+        background: rgba(64, 164, 171, 0.7);
+        color: white;
+    }
+    ul.messages li a {
+        color: white;
+        text-decoration: underline;
+    }
+
 section {
     display: inline-block;
     vertical-align: top;
     width: 400px;
     padding: 10px 15px;
+    margin: 10px 0;
 }
     section h2 {
         color: #12919D;
@@ -115,37 +137,68 @@ section {
 /* Items */
 
 .item {
-    padding: 10px 15px;
+    padding: 10px 0 10px 15px;
+    border-bottom: 1px solid #ccc;
 }
+    .item .id {
+        color: #777;
+        margin-right: 5px;
+    }
+    .item small {
+        color: #555;
+        float: right;
+        margin: 0 15px 0 0;
+    }
 
 #details {
 }
+    #details dl {
+        margin: 0;
+    }
     #details dt {
         font-size: 80%;
         color: #778;
-        margin: 0 0 3px 0;
+        margin: 10px 0 3px 0;
+    }
+    #details dt:first-of-type {
+        margin-top: 10px;
     }
     #details dd {
-        margin: 0 0 10px 0;
+        margin: 0 0 3px 0;
+    }
+    #details dd.token {
+        margin-top: 5px;
     }
 
 /* Devices */
 
 .device {
-    padding: 10px 15px;
+    padding: 10px 0 10px 15px;
+    border-bottom: 1px solid #ccc;
 }
+    .device .id {
+        color: #777;
+        margin-right: 5px;
+    }
+    .device small {
+        color: #555;
+        float: right;
+        margin: 0 15px 0 0;
+    }
 
-.token {
+span.token {
     padding: 3px 5px;
     border: 1px solid #ccc;
     border-radius: 3px;
+    margin-top: 5px;
 }
-    .token-placeholder {
+    span.token-placeholder {
         background: #ccc;
         color: #fff;
         border-radius: 3px;
         padding: 3px 100px;
         cursor: pointer;
+        margin-top: 5px;
     }
 
 .recent-read {
@@ -174,6 +227,24 @@ section {
         color: #fe8a71;
     }
 
+/* Locations */
+
+.location {
+    padding: 10px 0 10px 15px;
+    border-bottom: 1px solid #ccc;
+}
+    .location small {
+        color: #555;
+        float: right;
+        margin: 0 15px 0 0;
+    }
+
+.reparent .old {
+    color: #555;
+}
+.reparent .new {
+    font-weight: bold;
+}
 
 /* Forms */
 
@@ -199,10 +270,15 @@ form {
         font-size: 80%;
         color: rgba(0, 0, 0, 0.7);
     }
-    form input {
+    form .controls .help-block strong {
+        color: #fe8a71;
+    }
+    form input,
+    form select {
         font-size: 120%;
         width: 100%;
         padding: 5px;
+        box-sizing: border-box;
     }
     form textarea {
         font-size: 100%;
@@ -210,6 +286,7 @@ form {
         width: 100%;
         padding: 5px;
         line-height: 115%;
+        box-sizing: border-box;
     }
     form button,
     form .button {
@@ -222,4 +299,10 @@ form {
     }
     form button.dangerous {
         background: #fe8a71;
+    }
+    form .button.cancel {
+        background: #4a4e4d;
+    }
+    form .buttons {
+        text-align: right;
     }

@@ -20,6 +20,7 @@ class Device(models.Model):
 
     name = models.CharField(max_length=200, help_text="Unique-ish device name")
     type = models.CharField(max_length=200, blank=True, help_text="Device type")
+    notes = models.TextField(blank=True)
     token = models.TextField(blank=True, help_text="Device API token")
 
     mode = models.CharField(
@@ -34,6 +35,7 @@ class Device(models.Model):
 
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
+    last_seen = models.DateTimeField(blank=True, null=True)
 
     class urls(urlman.Urls):
         list = "/devices/"
@@ -58,9 +60,7 @@ class Device(models.Model):
         """
         Returns a QuerySet of "recent" device reads to show in the UI
         """
-        return self.reads.filter(
-            last_seen__gte=timezone.now() - datetime.timedelta(minutes=10)
-        ).order_by("-last_seen")[:50]
+        return self.reads.order_by("-last_seen")[:20]
 
 
 class DeviceRead(models.Model):
@@ -78,6 +78,13 @@ class DeviceRead(models.Model):
     tag = models.CharField(
         max_length=255,
         help_text="Type prefix, colon, hex value of tag (e.g. epc:f376ce13434a2b)",
+    )
+    item = models.ForeignKey(
+        "directory.Item",
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="device_reads",
     )
 
     created = models.DateTimeField(auto_now_add=True)

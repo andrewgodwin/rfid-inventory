@@ -22,12 +22,11 @@ class Tag(models.Model):
         blank=True,
         null=True,
         related_name="tags",
-        on_delete=models.PROTECT,
+        on_delete=models.CASCADE,
     )
 
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
-    deleted = models.DateTimeField(blank=True, null=True)
 
     def __str__(self):
         return self.id
@@ -47,6 +46,7 @@ class Item(models.Model):
 
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
+    last_seen = models.DateTimeField(blank=True, null=True)
     deleted = models.DateTimeField(blank=True, null=True)
 
     location = models.ForeignKey(
@@ -54,7 +54,7 @@ class Item(models.Model):
         related_name="items",
         blank=True,
         null=True,
-        on_delete=models.PROTECT,
+        on_delete=models.SET_NULL,
     )
     labels = models.ManyToManyField("directory.Label", related_name="items", blank=True)
 
@@ -69,6 +69,12 @@ class Item(models.Model):
         view = "{base}{self.id}/"
         edit = "{view}edit/"
         delete = "{view}delete/"
+
+    def recent_reads(self):
+        """
+        Returns a curated list of sightings
+        """
+        return self.device_reads.order_by("-last_seen")[:5]
 
 
 class ItemImage(models.Model):
@@ -105,10 +111,14 @@ class Location(models.Model):
     Locations may be nested inside other locations.
     """
 
-    name = models.CharField(max_length=255)
-    parent = models.ForeignKey(
-        "self", blank=True, null=True, related_name="children", on_delete=models.PROTECT
+    name = models.CharField(
+        max_length=255,
+        help_text="Name of location (use / for hierarchies)",
+        unique=True,
     )
+
+    description = models.TextField(blank=True)
+    notes = models.TextField(blank=True)
 
     latitude = models.FloatField(blank=True, null=True)
     longitude = models.FloatField(blank=True, null=True)
@@ -118,8 +128,19 @@ class Location(models.Model):
     updated = models.DateTimeField(auto_now=True)
     deleted = models.DateTimeField(blank=True, null=True)
 
+    class urls(urlman.Urls):
+        list = "/locations/"
+        create = "{list}create/"
+        view = "{list}{self.id}/"
+        edit = "{view}edit/"
+        delete = "{view}delete/"
+        items = "/items/?location={self.name}"
+
     def __str__(self):
         return self.name
+
+    def get_absolute_url(self):
+        return self.urls.view
 
 
 class Appearance(models.Model):

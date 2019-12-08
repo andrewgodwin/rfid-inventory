@@ -25,14 +25,14 @@ class ViewDevice(DetailView):
 
 class EditDevice(UpdateView):
     model = Device
-    fields = ["name", "type"]
+    fields = ["name", "type", "notes"]
     template_name = "devices/edit.html"
     extra_context = {"section": "devices"}
 
 
 class CreateDevice(CreateView):
     model = Device
-    fields = ["name", "type"]
+    fields = ["name", "type", "notes"]
     template_name = "devices/create.html"
     extra_context = {"section": "devices"}
 

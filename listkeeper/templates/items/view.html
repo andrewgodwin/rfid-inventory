@@ -21,17 +21,46 @@
                 <dt>Description</dt>
                 <dd>{{ item.description }}</dd>
             {% endif %}
+            <dt>Location</dt>
+            <dd>
+                {% if item.location %}
+                    <a href="{{ item.location.urls.view }}">{{ item.location.name }}</a>
+                {% else %}
+                    (none set)
+                {% endif %}
+            </dd>
             {% if item.notes %}
                 <dt>Notes</dt>
                 <dd>{{ item.notes }}</dd>
+            {% endif %}
+            <dt>Tags</dt>
+            {% if item.tags.exists %}
+                {% for tag in item.tags.all %}
+                    <dd>{{ tag }}</dd>
+                {% endfor %}
+            {% else %}
+                <dd class="empty">(no tags assigned)</dd>
             {% endif %}
         </dl>
     </section>
 
     <section id="tags">
-        <h2>Assigned Tags</h2>
-        {% for tag in item.tags.all %}
-            <p>{{ tag }}</p>
+        <h2>Sightings</h2>
+        {% for read in item.recent_reads %}
+            <div class="recent-read">
+                <a href="{{ read.device.urls.view }}">{{ read.device.name }} <small>{{ read.tag }}</small></a>
+                {% if read.present %}
+                    <span class="present">
+                        <i class="fa fa-check" aria-hidden="true"></i> Present
+                        <small>{{ read.last_seen|naturaltime }}</small>
+                    </span>
+                {% else %}
+                    <span class="not-present">
+                        <i class="fa fa-times" aria-hidden="true"></i> Not Present
+                        <small>Seen {{ read.last_seen|naturaltime }}</small>
+                    </span>
+                {% endif %}
+            </div>
         {% endfor %}
     </section>
 

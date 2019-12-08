@@ -16,21 +16,32 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from directory.views import items
+from directory.views import items, locations
 from devices import api, views as devices
 
 urlpatterns = [
     path("", items.index),
+    # Item URLs
     path("items/", items.ListItems.as_view()),
     path("items/create/", items.CreateItem.as_view()),
     path("items/<int:pk>/", items.ViewItem.as_view()),
     path("items/<int:pk>/edit/", items.EditItem.as_view()),
     path("items/<int:pk>/delete/", items.DeleteItem.as_view()),
+    # Device URLs
     path("devices/", devices.ListDevices.as_view()),
     path("devices/create/", devices.CreateDevice.as_view()),
     path("devices/<int:pk>/", devices.ViewDevice.as_view()),
     path("devices/<int:pk>/edit/", devices.EditDevice.as_view()),
     path("devices/<int:pk>/delete/", devices.DeleteDevice.as_view()),
+    # Location URLs
+    path("locations/", locations.ListLocations.as_view()),
+    path("locations/create/", locations.CreateLocation.as_view()),
+    path("locations/reparent/", locations.ReparentLocation.as_view()),
+    path("locations/<int:pk>/", locations.ViewLocation.as_view()),
+    path("locations/<int:pk>/edit/", locations.EditLocation.as_view()),
+    path("locations/<int:pk>/delete/", locations.DeleteLocation.as_view()),
+    # API URLs
     path("api/device/sync/", api.sync),
+    # Admin delegation
     path("admin/", admin.site.urls),
 ]

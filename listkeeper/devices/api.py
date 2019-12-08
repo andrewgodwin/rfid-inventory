@@ -25,6 +25,8 @@ def sync(request):
         return JsonResponse({"error": "Invalid token"}, status=400)
     # Handle any RFID tags it's seen
     update_reads(device, data.get("tags", []))
+    # Ping that we saw it
+    Device.objects.filter(id=device.id).update(last_seen=timezone.now())
     # Send back a mode
     return JsonResponse({"mode": "passive"})
 
@@ -43,6 +45,9 @@ def update_reads(device, tags):
             read = DeviceRead(device=device, tag=tag)
         read.last_seen = seen_time
         read.present = True
+        # See if we can associate it with an item
+        if read.directory_tag and read.directory_tag.item:
+            read.item = read.directory_tag.item
         read.save()
     # Set tags that are no longer visible to not present
     DeviceRead.objects.filter(last_seen__lt=seen_time, present=True).update(
