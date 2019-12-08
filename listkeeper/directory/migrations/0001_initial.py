@@ -162,7 +162,7 @@ class Migration(migrations.Migration):
             ),
         ),
         migrations.CreateModel(
-            name="Appearance",
+            name="LocationHistory",
             fields=[
                 (
                     "id",
@@ -178,7 +178,7 @@ class Migration(migrations.Migration):
                     "item",
                     models.ForeignKey(
                         on_delete=django.db.models.deletion.PROTECT,
-                        related_name="appearances",
+                        related_name="location_histories",
                         to="directory.Item",
                     ),
                 ),
@@ -186,7 +186,7 @@ class Migration(migrations.Migration):
                     "location",
                     models.ForeignKey(
                         on_delete=django.db.models.deletion.PROTECT,
-                        related_name="appearances",
+                        related_name="location_histories",
                         to="directory.Location",
                     ),
                 ),

@@ -44,7 +44,7 @@
         </dl>
     </section>
 
-    <section id="tags">
+    <section id="reads">
         <h2>Sightings</h2>
         {% for read in item.recent_reads %}
             <div class="recent-read">
@@ -60,6 +60,15 @@
                         <small>Seen {{ read.last_seen|naturaltime }}</small>
                     </span>
                 {% endif %}
+            </div>
+        {% endfor %}
+    </section>
+
+    <section id="location_history">
+        <h2>Location History</h2>
+        {% for location_history in item.recent_locations %}
+            <div class="entry">
+                <a href="{{ location_history.location.urls.view }}">{{ location_history.location.name }} <small>{{ location_history.timestamp|naturaltime }}</small></a>
             </div>
         {% endfor %}
     </section>

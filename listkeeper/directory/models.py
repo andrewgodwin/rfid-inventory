@@ -3,6 +3,7 @@ import uuid
 import urlman
 
 from django.db import models
+from django.utils import timezone
 
 
 class Tag(models.Model):
@@ -76,6 +77,21 @@ class Item(models.Model):
         """
         return self.device_reads.order_by("-last_seen")[:5]
 
+    def recent_locations(self):
+        """
+        A short location history
+        """
+        return self.location_histories.order_by("-timestamp")[:5]
+
+    def set_location(self, location):
+        """
+        Adds an appearance in a location, if it wasn't already there.
+        """
+        if self.location != location:
+            self.location_histories.create(location=location, timestamp=timezone.now())
+            self.location = location
+            self.save(update_fields=["location"])
+
 
 class ItemImage(models.Model):
     """
@@ -143,18 +159,23 @@ class Location(models.Model):
         return self.urls.view
 
 
-class Appearance(models.Model):
+class LocationHistory(models.Model):
     """
-    A log of when an item was seen in a location.
+    A log of when an item moved locations.
     """
 
     item = models.ForeignKey(
-        "directory.Item", related_name="appearances", on_delete=models.PROTECT
+        "directory.Item", related_name="location_histories", on_delete=models.PROTECT
     )
     location = models.ForeignKey(
-        "directory.Location", related_name="appearances", on_delete=models.PROTECT
+        "directory.Location",
+        related_name="location_histories",
+        on_delete=models.PROTECT,
     )
     timestamp = models.DateTimeField()
+
+    class Meta:
+        verbose_name_plural = "location histories"
 
     def __str__(self):
         return "%s: %s in %s at %s" % (

@@ -1,11 +1,11 @@
 from django.contrib import admin
 
-from .models import Tag, Item, Label, Location, Appearance
+from .models import Tag, Item, Label, Location, LocationHistory
 
 admin.site.register(Tag)
 admin.site.register(Label)
 admin.site.register(Location)
-admin.site.register(Appearance)
+admin.site.register(LocationHistory)
 
 
 @admin.register(Item)

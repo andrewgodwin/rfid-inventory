@@ -170,6 +170,14 @@ section {
         margin-top: 5px;
     }
 
+#location_history {
+}
+    #location_history .entry small {
+        color: #555;
+        float: right;
+        margin: 0 0 0 15px;
+    }
+
 /* Devices */
 
 .device {

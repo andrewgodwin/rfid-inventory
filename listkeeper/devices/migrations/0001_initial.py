@@ -41,8 +41,8 @@ class Migration(migrations.Migration):
                     "mode",
                     models.CharField(
                         choices=[
-                            ("passive", "Passive tag tracking"),
-                            ("location", "Location assignment"),
+                            ("passive", "Passive tracking"),
+                            ("assigning", "Assigning locations"),
                         ],
                         default="passive",
                         help_text="Current device mode",

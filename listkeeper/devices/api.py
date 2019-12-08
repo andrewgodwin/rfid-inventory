@@ -48,6 +48,9 @@ def update_reads(device, tags):
         # See if we can associate it with an item
         if read.directory_tag and read.directory_tag.item:
             read.item = read.directory_tag.item
+            # And see if we're in location-assigning mode!
+            if device.mode == "assigning" and device.location:
+                read.item.set_location(device.location)
         read.save()
     # Set tags that are no longer visible to not present
     DeviceRead.objects.filter(last_seen__lt=seen_time, present=True).update(
