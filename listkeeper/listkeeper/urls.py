@@ -33,6 +33,7 @@ urlpatterns = [
     path("devices/<int:pk>/", devices.ViewDevice.as_view()),
     path("devices/<int:pk>/edit/", devices.EditDevice.as_view()),
     path("devices/<int:pk>/delete/", devices.DeleteDevice.as_view()),
+    path("devices/<int:pk>/set-mode/<str:mode>/", devices.SetDeviceMode.as_view()),
     # Location URLs
     path("locations/", locations.ListLocations.as_view()),
     path("locations/create/", locations.CreateLocation.as_view()),

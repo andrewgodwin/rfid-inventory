@@ -14,8 +14,8 @@ class Device(models.Model):
     """
 
     MODE_CHOICES = [
-        ("passive", "Passive tag tracking"),
-        ("location", "Location assignment"),
+        ("passive", "Passive tracking"),
+        ("assigning", "Assigning locations"),
     ]
 
     name = models.CharField(max_length=200, help_text="Unique-ish device name")
@@ -42,6 +42,8 @@ class Device(models.Model):
         view = "{list}{self.id}/"
         edit = "{view}edit/"
         delete = "{view}delete/"
+        set_assigning = "{view}set-mode/assigning/"
+        set_passive = "{view}set-mode/passive/"
 
     def __str__(self):
         return "#%s: %s" % (self.id, self.name)
