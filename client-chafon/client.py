@@ -2,7 +2,7 @@ import click
 import json
 import requests
 import time
-from ru5102 import Reader, commands
+from chafon import Reader, commands
 
 
 SEND_GAP = 1
