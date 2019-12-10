@@ -7,7 +7,8 @@ import time
 from chafon import Reader, commands
 
 
-SEND_GAP = 1
+SEND_GAP_ACTIVE = 1
+SEND_GAP_INACTIVE = 60
 
 
 @click.command()
@@ -22,6 +23,7 @@ def main(serial_port, url, token):
     reader = Reader(serial_port)
     synchronizer = Synchronizer(url, token)
     seen_tags = set()
+    last_seen_tags = seen_tags
     seen_tags_time = 0
     # Show debugging info
     print(reader.run(commands.GetReaderInformation()))
@@ -31,8 +33,11 @@ def main(serial_port, url, token):
         response = reader.run(commands.Inventory())
         seen_tags.update(["epc:%s" % tag for tag in response.tags])
         # If it's been enough time, update the server with what happened
-        if time.time() - seen_tags_time > SEND_GAP:
+        time_since_send = time.time() - seen_tags_time
+        tags_changed = seen_tags == last_seen_tags
+        if (tags_changed and time_since_send > SEND_GAP_ACTIVE) or time_since_send > SEND_GAP_INACTIVE:
             synchronizer.sync(seen_tags)
+            last_seen_tags = seen_tags
             seen_tags = set()
             seen_tags_time = time.time()
 
