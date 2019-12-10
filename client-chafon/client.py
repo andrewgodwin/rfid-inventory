@@ -34,7 +34,7 @@ def main(serial_port, url, token):
         seen_tags.update(["epc:%s" % tag for tag in response.tags])
         # If it's been enough time, update the server with what happened
         time_since_send = time.time() - seen_tags_time
-        tags_changed = seen_tags == last_seen_tags
+        tags_changed = seen_tags != last_seen_tags
         if (tags_changed and time_since_send > SEND_GAP_ACTIVE) or time_since_send > SEND_GAP_INACTIVE:
             synchronizer.sync(seen_tags)
             last_seen_tags = seen_tags
