@@ -9,7 +9,7 @@
     {% for device in devices %}
         <div class="device">
             <a href="{{ device.urls.view }}"><span class="id">#{{ device.id }}</span> {{ device.name }}</a>
-            <small>{{ device.get_mode_display }}</small>
+            <small>{{ device.get_mode_display }} {% if device.location %}({{ device.location.name }}){% endif %}</small>
         </div>
     {% empty %}
         <div class="device empty">No devices yet.</div>
