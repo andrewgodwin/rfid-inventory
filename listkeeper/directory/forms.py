@@ -71,6 +71,7 @@ class EditItemForm(BaseItemForm):
         super().__init__(*args, **kwargs)
 
     def save(self, **kwargs):
+        from devices.models import DeviceRead
         instance = super().save(**kwargs)
         # Re-hydrate tags into model objects
         saved_tags = set(
@@ -81,8 +82,10 @@ class EditItemForm(BaseItemForm):
         current_tags = set(t.id for t in instance.tags.all())
         for added_tag in saved_tags.difference(current_tags):
             instance.tags.create(id=added_tag)
+            DeviceRead.objects.filter(tag=added_tag).update(item=instance)
         for removed_tag in current_tags.difference(saved_tags):
             instance.tags.filter(id=removed_tag).delete()
+            DeviceRead.objects.filter(tag=removed_tag).update(item=None)
         return instance
 
 
