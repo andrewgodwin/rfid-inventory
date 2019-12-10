@@ -1,0 +1,4 @@
+pyserial~=3.4
+requests~=2.22
+crcmod~=1.7
+click~=7.0
