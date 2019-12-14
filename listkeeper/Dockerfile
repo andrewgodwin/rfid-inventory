@@ -11,6 +11,7 @@ RUN pip3 install -r requirements.txt && pip3 install gunicorn
 
 # Install rest of app
 COPY . .
+COPY listkeeper/production_settings.py listkeeper/local_settings.py
 
 # Commands to run with
 ENV PORT 80
