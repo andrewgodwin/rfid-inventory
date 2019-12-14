@@ -7,9 +7,9 @@ import time
 from chafon import Reader, commands
 
 
-READ_GAP = 1
+READ_GAP = 0.2
 SEND_GAP_ACTIVE = 1
-SEND_GAP_INACTIVE = 60
+SEND_GAP_INACTIVE = 120
 
 
 @click.command()
