@@ -7,29 +7,35 @@ import time
 from chafon import Reader, commands
 
 
+READ_GAP = 1
 SEND_GAP_ACTIVE = 1
 SEND_GAP_INACTIVE = 60
 
 
 @click.command()
+@click.option("--power", default=5)
+@click.option("--reader-type", default="ru5102")
 @click.argument("serial_port")
 @click.argument("url")
 @click.argument("token")
-def main(serial_port, url, token):
+def main(serial_port, url, token, power, reader_type):
     """
     Main command loop
     """
     # Set things up
-    reader = Reader(serial_port)
+    reader = Reader(serial_port, type=reader_type)
     synchronizer = Synchronizer(url, token)
     seen_tags = set()
     last_seen_tags = seen_tags
     seen_tags_time = 0
-    # Show debugging info
-    print(reader.run(commands.GetReaderInformation()))
+    # Verify reader info
+    reader_info = reader.run(commands.GetReaderInformation())
+    assert reader_info.reader_type == reader_type, "The reader is type %s, not configured type %s" % (reader_info.reader_type, reader_type)
+    # Set power
+    reader.run(commands.SetPower(power))
     # Main detection loop
     while True:
-        time.sleep(0.1)
+        time.sleep(READ_GAP)
         response = reader.run(commands.Inventory())
         seen_tags.update(["epc:%s" % tag for tag in response.tags])
         # If it's been enough time, update the server with what happened

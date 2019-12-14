@@ -1,7 +1,7 @@
 import struct
 
 from .base import Command, Response
-from ..constants import COMMAND, STATUS, REGIONS
+from ..constants import COMMAND, STATUS, REGIONS, TYPES
 from ..exceptions import NoTagError
 
 
@@ -12,43 +12,49 @@ class ReaderInformationResponse(Response):
 
     symbol = COMMAND.GET_READER_INFORMATION
 
-    region_codes = {
-        0b0000: "user",
-        0b0001: "china",
-        0b0010: "usa",
-        0b0011: "korea",
-    }
-
     def decode_data(self):
         self.major_version, self.minor_version, reader_type, protocol_type = struct.unpack("<BBBB", self.data[:4])
-        if reader_type == 0x08:
+        if reader_type == TYPES["ru5102"]:
             self.reader_type = "ru5102"
             max_frequency_byte, min_frequency_byte, self.power, self.scan_time = struct.unpack("<BBBB", self.data[4:])
-            max_frequency = 0b00111111 & max_frequency_byte
-            min_frequency = 0b00111111 & min_frequency_byte
-            region_code = ((max_frequency_byte >> 6) << 2) | (min_frequency_byte >> 2)
-            for region_name, region_details in REGIONS.items():
-                if region_details["code"] == region_code:
-                    self.region = region_name
-                    self.min_frequency = region_details["base"] + (region_details["step"] * min_frequency)
-                    self.max_frequency = region_details["base"] + (region_details["step"] * max_frequency)
-                    break
-            else:
-                raise RuntimeError("Unknown region code %02x" % region_code)
+            self.decode_frequency(max_frequency_byte, min_frequency_byte)
+        elif reader_type == TYPES["rru2881"]:
+            self.reader_type = "rru2881"
+            min_frequency_byte, max_frequency_byte, self.power, self.scan_time, self.antenna, _, _, self.check_antenna = struct.unpack("<BBBBBBBB", self.data[4:])
+            self.decode_frequency(max_frequency_byte, min_frequency_byte)
         else:
             raise RuntimeError("Unknown reader model %02x" % reader_type)
 
+    def decode_frequency(self, min_frequency_byte, max_frequency_byte):
+        """
+        Decodes operating frequency from a pair of frequency bytes
+        """
+        max_frequency = 0b00111111 & max_frequency_byte
+        min_frequency = 0b00111111 & min_frequency_byte
+        region_code = ((max_frequency_byte >> 6) << 2) | (min_frequency_byte >> 6)
+        for region_name, region_details in REGIONS.items():
+            if region_details["code"] == region_code:
+                self.region = region_name
+                self.min_frequency = region_details["base"] + (region_details["step"] * min_frequency)
+                self.max_frequency = region_details["base"] + (region_details["step"] * max_frequency)
+                break
+        else:
+            raise RuntimeError("Unknown region code {0:4b}".format(region_code))
+
     def __repr__(self):
-        return "<%s %s version:%s.%s power:%s scantime:%s freq:%s-%s (%s)>" % (
+        return "<%s %s version:%s.%s freq:%s-%s (%s) %s>" % (
             self.__class__.__name__,
             self.reader_type,
             self.major_version,
             self.minor_version,
-            self.power,
-            self.scan_time,
             self.min_frequency,
             self.max_frequency,
             self.region,
+            " ".join(
+                "%s:%s" % (name, getattr(self, name))
+                for name in ["power", "scan_time", "antenna", "check_antenna"]
+                if hasattr(self, name)
+            ),
         )
 
 
@@ -68,16 +74,17 @@ class SetRegion(Command):
     Sets the region of the reader to a predetermined value.
     """
 
-    regions = {
-        "usa": ""
-    }
-
     def __init__(self, region):
+        # Fetch that region's details
         try:
-            region_details = self.regions[region]
+            region_details = REGIONS[region]
         except KeyError:
             raise ValueError("%s is not a valid region" % region)
-        super().__init__(command=COMMAND.SET_REGION, data=struct.pack("<B", power))
+        # Encode it
+        min_frequency_byte = (region_details["code"] & 0b1100) << 6
+        max_frequency_byte = ((region_details["code"] & 0b0011) << 6) | region_details["max_n"]
+        print("{0:8b} {1:8b}".format(min_frequency_byte, max_frequency_byte))
+        super().__init__(command=COMMAND.SET_REGION, data=struct.pack("<BB", min_frequency_byte, max_frequency_byte))
 
 
 class SetScanTime(Command):

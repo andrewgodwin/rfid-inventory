@@ -2,7 +2,7 @@ import serial
 import struct
 from crcmod.predefined import Crc
 
-from .constants import STATUS
+from .constants import STATUS, TYPES
 from .exceptions import *
 
 
@@ -11,8 +11,10 @@ class Reader:
     Class that represents a reader
     """
 
-    def __init__(self, device, baud=57600):
+    def __init__(self, device, baud=57600, type="ru5102"):
         self.connection = serial.Serial(device, baud)
+        assert type in TYPES
+        self.type = type
 
     def send_raw(self, address, command, data):
         """
