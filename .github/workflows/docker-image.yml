@@ -1,0 +1,27 @@
+name: Docker Image Builder
+
+on: [push]
+
+env:
+  GITHUB_SHA: ${{ github.sha }}
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v1
+
+    - name: Build the Docker image
+      run: docker build . --file Dockerfile --tag andrewgodwin/rfid-inventory:$GITHUB_SHA
+
+    - name: Log into Docker Hub
+      uses: Azure/docker-login@v1
+      with:
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+
+    - name: Push the Docker image
+      run: docker push andrewgodwin/rfid-inventory:$GITHUB_SHA
