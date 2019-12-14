@@ -11,3 +11,7 @@ DATABASES = {
 }
 
 ALLOWED_HOSTS = [x.strip() for x in os.environ["ALLOWED_HOSTS"].split(",") if x.strip()]
+
+DEBUG = False
+
+SECRET_KEY = os.environ["SECRET_KEY"]
