@@ -17,6 +17,9 @@ DEBUG = False
 
 SECRET_KEY = os.environ["SECRET_KEY"]
 
+DEFAULT_FILE_STORAGE = "storages.backends.gcloud.GoogleCloudStorage"
+GS_BUCKET_NAME = "listkeeper-personal-files"
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': True,
