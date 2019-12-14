@@ -1,4 +1,4 @@
-name: Docker Image Builder
+name: Listkeeper Docker Image
 
 on: [push]
 
@@ -15,7 +15,7 @@ jobs:
     - uses: actions/checkout@v1
 
     - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag andrewgodwin/rfid-inventory:$GITHUB_SHA
+      run: cd listkeeper && docker build . --file Dockerfile --tag andrewgodwin/rfid-inventory:$GITHUB_SHA
 
     - name: Log into Docker Hub
       uses: Azure/docker-login@v1
