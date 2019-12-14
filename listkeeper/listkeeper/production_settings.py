@@ -11,7 +11,7 @@ DATABASES = {
     }
 }
 
-ALLOWED_HOSTS = [x.strip() for x in os.environ["ALLOWED_HOSTS"].split(",") if x.strip()]
+ALLOWED_HOSTS = [x.strip() for x in os.environ.get("ALLOWED_HOSTS", "").split(",") if x.strip()]
 
 DEBUG = False
 

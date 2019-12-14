@@ -14,7 +14,7 @@ COPY . .
 ENV DJANGO_SETTINGS_MODULE listkeeper.production_settings
 
 # Handle static files
-RUN python manage.py collectstatic --noinput
+RUN SECRET_KEY=temp python manage.py collectstatic --noinput
 
 # Commands to run with
 ENV PORT 80
