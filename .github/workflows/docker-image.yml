@@ -15,7 +15,7 @@ jobs:
     - uses: actions/checkout@v1
 
     - name: Build the Docker image
-      run: cd listkeeper && docker build . --file Dockerfile --tag andrewgodwin/rfid-inventory:$GITHUB_SHA
+      run: cd listkeeper && docker build . --file Dockerfile --tag andrewgodwin/listkeeper:$GITHUB_SHA
 
     - name: Log into Docker Hub
       uses: Azure/docker-login@v1
@@ -24,4 +24,4 @@ jobs:
         password: ${{ secrets.DOCKER_PASSWORD }}
 
     - name: Push the Docker image
-      run: docker push andrewgodwin/rfid-inventory:$GITHUB_SHA
+      run: docker push andrewgodwin/listkeeper:$GITHUB_SHA
