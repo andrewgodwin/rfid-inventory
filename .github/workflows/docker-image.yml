@@ -3,7 +3,8 @@ name: Listkeeper Docker Image
 on: [push]
 
 env:
-  GITHUB_SHA: ${{ github.sha }}
+  IMAGE: "listkeeper"
+  IMAGE_TAG: ""
   GOOGLECLOUD_PROJECT: ${{ secrets.GOOGLECLOUD_PROJECT }}
   GOOGLECLOUD_EMAIL: ${{ secrets.GOOGLECLOUD_EMAIL }}
 
@@ -24,17 +25,19 @@ jobs:
         service_account_key: ${{ secrets.GOOGLECLOUD_KEY }}
 
     # Configure docker to use the gcloud command-line tool as a credential helper
-    - run: |
-        # Set up docker to authenticate
-        # via gcloud command-line tool.
-        gcloud auth configure-docker
+    - name: "Authenticate Docker"
+      run: gcloud auth configure-docker
+
+    # Calculate the image name
+    - name: Calculate Docker image name
+      run: echo "::set-env name=IMAGE_TAG::`date +%s`"
 
     # Build the Docker image
     - name: Build
       run: |
-        docker build -t gcr.io/"$GOOGLECLOUD_PROJECT"/"$IMAGE":"$GITHUB_SHA"  .
+        docker build -t gcr.io/"$GOOGLECLOUD_PROJECT"/"$IMAGE":"$IMAGE_TAG" .
 
     # Push the Docker image to Google Container Registry
     - name: Publish
       run: |
-        docker push gcr.io/$GOOGLECLOUD_PROJECT/$IMAGE:$GITHUB_SHA
+        docker push gcr.io/$GOOGLECLOUD_PROJECT/$IMAGE:$IMAGE_TAG
