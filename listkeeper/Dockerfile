@@ -11,7 +11,10 @@ RUN pip3 install -r requirements.txt && pip3 install gunicorn
 
 # Install rest of app
 COPY . .
-COPY listkeeper/production_settings.py listkeeper/local_settings.py
+ENV DJANGO_SETTINGS_MODULE listkeeper.production_settings
+
+# Handle static files
+RUN python manage.py collectstatic --noinput
 
 # Commands to run with
 ENV PORT 80
