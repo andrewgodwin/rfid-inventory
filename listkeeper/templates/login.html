@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block raw_content %}
+
+
+    <div class="login">
+        <a href="/" class="logo"><b>rfid</b> inventory</a>
+
+        <form action="." method="POST">
+            {{ form|crispy }}
+            {% csrf_token %}
+            <button>Login</button>
+        </form>
+    </div>
+
+{% endblock raw_content %}

@@ -1,3 +1,4 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, redirect
 from django.views.generic import (
     CreateView,
@@ -10,40 +11,40 @@ from django.views.generic import (
 from .models import Device
 
 
-class ListDevices(ListView):
+class ListDevices(LoginRequiredMixin, ListView):
     queryset = Device.objects.order_by("name")
     template_name = "devices/list.html"
     context_object_name = "devices"
     extra_context = {"section": "devices"}
 
 
-class ViewDevice(DetailView):
+class ViewDevice(LoginRequiredMixin, DetailView):
     model = Device
     template_name = "devices/view.html"
     extra_context = {"section": "devices"}
 
 
-class EditDevice(UpdateView):
+class EditDevice(LoginRequiredMixin, UpdateView):
     model = Device
     fields = ["name", "type", "location", "notes"]
     template_name = "devices/edit.html"
     extra_context = {"section": "devices"}
 
 
-class CreateDevice(CreateView):
+class CreateDevice(LoginRequiredMixin, CreateView):
     model = Device
     fields = ["name", "type", "location", "notes"]
     template_name = "devices/create.html"
     extra_context = {"section": "devices"}
 
 
-class DeleteDevice(DeleteView):
+class DeleteDevice(LoginRequiredMixin, DeleteView):
     model = Device
     template_name = "devices/delete.html"
     success_url = "/devices/"
 
 
-class SetDeviceMode(DetailView):
+class SetDeviceMode(LoginRequiredMixin, DetailView):
     model = Device
 
     def get(self, request, *args, **kwargs):

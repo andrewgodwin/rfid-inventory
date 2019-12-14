@@ -1,3 +1,4 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, redirect
 from django.views.generic import (
     CreateView,
@@ -15,27 +16,27 @@ def index(request):
     return redirect(Item.urls.base)
 
 
-class ListItems(ListView):
+class ListItems(LoginRequiredMixin, ListView):
     queryset = Item.objects.select_related("location").order_by("name")
     template_name = "items/list.html"
     context_object_name = "items"
     extra_context = {"section": "items"}
 
 
-class ViewItem(DetailView):
+class ViewItem(LoginRequiredMixin, DetailView):
     model = Item
     template_name = "items/view.html"
     extra_context = {"section": "items"}
 
 
-class EditItem(UpdateView):
+class EditItem(LoginRequiredMixin, UpdateView):
     model = Item
     form_class = EditItemForm
     template_name = "items/edit.html"
     extra_context = {"section": "items"}
 
 
-class CreateItem(CreateView):
+class CreateItem(LoginRequiredMixin, CreateView):
     model = Item
     form_class = CreateItemForm
     template_name = "items/create.html"
@@ -46,7 +47,7 @@ class CreateItem(CreateView):
             return {"tag": self.request.GET["tag"]}
 
 
-class DeleteItem(DeleteView):
+class DeleteItem(LoginRequiredMixin, DeleteView):
     model = Item
     template_name = "items/delete.html"
     success_url = "/items/"

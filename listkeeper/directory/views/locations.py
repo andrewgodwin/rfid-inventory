@@ -1,4 +1,5 @@
 from django.contrib import messages
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import models
 from django.shortcuts import render, redirect
 from django.views.generic import (
@@ -14,7 +15,7 @@ from ..forms import LocationForm, ReparentForm
 from ..models import Location
 
 
-class ListLocations(ListView):
+class ListLocations(LoginRequiredMixin, ListView):
     queryset = Location.objects.order_by("name").annotate(
         items_count=models.Count("items")
     )
@@ -23,20 +24,20 @@ class ListLocations(ListView):
     extra_context = {"section": "locations"}
 
 
-class ViewLocation(DetailView):
+class ViewLocation(LoginRequiredMixin, DetailView):
     model = Location
     template_name = "locations/view.html"
     extra_context = {"section": "locations"}
 
 
-class EditLocation(UpdateView):
+class EditLocation(LoginRequiredMixin, UpdateView):
     model = Location
     form_class = LocationForm
     template_name = "locations/edit.html"
     extra_context = {"section": "locations"}
 
 
-class CreateLocation(CreateView):
+class CreateLocation(LoginRequiredMixin, CreateView):
     model = Location
     form_class = LocationForm
     template_name = "locations/create.html"
@@ -55,13 +56,13 @@ class CreateLocation(CreateView):
         return super().get_success_url()
 
 
-class DeleteLocation(DeleteView):
+class DeleteLocation(LoginRequiredMixin, DeleteView):
     model = Location
     template_name = "locations/delete.html"
     success_url = "/locations/"
 
 
-class ReparentLocation(FormView):
+class ReparentLocation(LoginRequiredMixin, FormView):
     template_name = "locations/reparent.html"
     form_class = ReparentForm
     extra_context = {"section": "locations"}

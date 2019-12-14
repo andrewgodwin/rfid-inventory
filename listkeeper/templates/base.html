@@ -17,6 +17,8 @@
 </head>
 <body class="section-{{ section }}">
 
+    {% block raw_content %}
+
     <header>
         <a href="/" class="logo"><b>rfid</b> inventory</a>
         <nav>
@@ -34,12 +36,12 @@
     </ul>
     {% endif %}
 
-    {% block raw_content %}
     <div class="content">
         {% block content %}
         {% endblock %}
         <div class="clearfix"></div>
     </div>
+
     {% endblock %}
 
 </body>
