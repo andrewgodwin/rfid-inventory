@@ -30,7 +30,7 @@ jobs:
 
     # Calculate the image name
     - name: Calculate Docker image name
-      run: echo "::set-env name=IMAGE_TAG::`date +%s`"
+      run: echo "::set-env name=IMAGE_TAG::`git rev-parse --short HEAD`"
 
     # Build the Docker image
     - name: Build
