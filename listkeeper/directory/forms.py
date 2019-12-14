@@ -72,6 +72,7 @@ class EditItemForm(BaseItemForm):
 
     def save(self, **kwargs):
         from devices.models import DeviceRead
+
         instance = super().save(**kwargs)
         # Re-hydrate tags into model objects
         saved_tags = set(

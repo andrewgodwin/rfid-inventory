@@ -22,8 +22,8 @@ from devices import api, views as devices
 urlpatterns = [
     path("", items.index),
     # Auth
-    path('auth/login/', auth.views.LoginView.as_view(template_name='login.html')),
-    path('auth/logout/', auth.views.LogoutView.as_view()),
+    path("auth/login/", auth.views.LoginView.as_view(template_name="login.html")),
+    path("auth/logout/", auth.views.LogoutView.as_view()),
     # Item URLs
     path("items/", items.ListItems.as_view()),
     path("items/create/", items.CreateItem.as_view()),
