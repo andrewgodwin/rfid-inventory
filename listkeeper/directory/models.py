@@ -144,6 +144,9 @@ class Location(models.Model):
     updated = models.DateTimeField(auto_now=True)
     deleted = models.DateTimeField(blank=True, null=True)
 
+    class Meta:
+        ordering = ["name"]
+
     class urls(urlman.Urls):
         list = "/locations/"
         create = "{list}create/"
