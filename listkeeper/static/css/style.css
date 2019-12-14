@@ -1,7 +1,7 @@
 /* General styles */
 
 body {
-    font-family: 'Roboto', sans-serif;
+    font-family: sans-serif;
 }
 
 a {
@@ -28,6 +28,7 @@ header {
         text-align: right;
         padding: 0 10px 0 0;
         font-size: 120%;
+        font-family: 'Roboto', sans-serif;
     }
     header nav {
         margin: 0 0 0 15px;
@@ -42,6 +43,7 @@ header {
         padding: 6px 1px 3px 1px;
         border-top: 4px solid #4a4e4d;
         margin: 0 20px 0 0px;
+        font-family: 'Roboto', sans-serif;
     }
     header nav a:hover {
         border-top: 4px solid #3da4ab;
@@ -269,6 +271,7 @@ div.login {
         display: block;
         font-size: 300%;
         margin: 30px 0 40px 0;
+        font-family: 'Roboto', sans-serif;
     }
     div.login form {
         display: inline-block;
@@ -337,4 +340,19 @@ form {
     }
     form .buttons {
         text-align: right;
+    }
+    form .alert {
+        color: white;
+        background: rgba(254, 138, 113, 0.8);
+        border: 1px solid rgba(254, 138, 113, 0.8);
+        margin: 0 0 30px 0;
+    }
+    form .alert ul {
+        list-style-type: none;
+        margin: 10px 10px;
+        padding: 0;
+    }
+    form .alert li {
+        margin: 0 0 10px 0;
+        padding: 0;
     }
