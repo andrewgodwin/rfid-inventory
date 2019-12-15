@@ -3,7 +3,7 @@ import uuid
 import urlman
 
 from django.db import models
-from django.utils import timezone
+from django.utils import functional, timezone
 
 
 class Tag(models.Model):
@@ -91,6 +91,15 @@ class Item(models.Model):
             self.location_histories.create(location=location, timestamp=timezone.now())
             self.location = location
             self.save(update_fields=["location"])
+
+    @functional.cached_property
+    def image(self):
+        """
+        Returns an image if there is one
+        """
+        if self.images.exists():
+            return self.images.all()[0].image
+        return None
 
 
 class ItemImage(models.Model):

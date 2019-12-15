@@ -6,7 +6,7 @@
     <h1>Editing: {{ item.name }}</h1>
 
     <section>
-        <form action="." method="POST" class="create create-item">
+        <form action="." method="POST" class="create create-item" enctype="multipart/form-data">
             {{ form|crispy }}
             {% csrf_token %}
             <a class="button cancel" href="{{ item.urls.view }}">Cancel</a>

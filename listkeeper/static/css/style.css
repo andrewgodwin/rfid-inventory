@@ -140,16 +140,33 @@ section {
 
 .item {
     padding: 10px 0 10px 15px;
+    height: 50px;
     border-bottom: 1px solid #ccc;
+    font-size: 110%;
 }
+    .item .name {
+        display: inline-block;
+        margin: 3px 0 0 0;
+    }
     .item .id {
         color: #777;
         margin-right: 5px;
+        font-size: 75%;
     }
     .item small {
         color: #555;
         float: right;
         margin: 0 15px 0 0;
+        line-height: 50px;
+    }
+    .item img {
+        margin: 0 10px 0 0;
+        float: left;
+    }
+    .item .description {
+        font-size: 85%;
+        color: #333;
+        margin: 5px 0 0 0;
     }
 
 #details {

@@ -60,6 +60,7 @@ class BaseItemForm(forms.ModelForm):
 class EditItemForm(BaseItemForm):
 
     tags = forms.CharField(required=False, widget=forms.Textarea)
+    image = forms.ImageField(required=False)
 
     def __init__(self, *args, **kwargs):
         # Grab the tags off of the Tag model
@@ -87,6 +88,10 @@ class EditItemForm(BaseItemForm):
         for removed_tag in current_tags.difference(saved_tags):
             instance.tags.filter(id=removed_tag).delete()
             DeviceRead.objects.filter(tag=removed_tag).update(item=None)
+        # Handle the image
+        if self.cleaned_data["image"]:
+            instance.images.all().delete()
+            instance.images.create(image=self.cleaned_data["image"])
         return instance
 
 
@@ -95,10 +100,14 @@ class CreateItemForm(BaseItemForm):
     tag = forms.CharField(
         required=False, help_text="Optional tag to immediately associate with"
     )
+    image = forms.ImageField(required=False)
 
     def save(self, **kwargs):
         instance = super().save(**kwargs)
         # If we got a tag, add that too
         if self.cleaned_data["tag"]:
             instance.tags.create(id=self.cleaned_data["tag"])
+        # And an image
+        if self.cleaned_data["image"]:
+            instance.images.create(image=self.cleaned_data["image"])
         return instance

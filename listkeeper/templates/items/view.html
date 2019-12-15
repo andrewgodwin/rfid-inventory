@@ -1,7 +1,9 @@
 {% extends "base.html" %}
+
 {% load crispy_forms_tags %}
 {% load humanize %}
 {% load static %}
+{% load imagekit %}
 
 {% block content %}
 
@@ -17,10 +19,17 @@
         <dl>
             <dt>Name</dt>
             <dd>{{ item.name }}</dd>
+
             {% if item.description %}
-                <dt>Description</dt>
-                <dd>{{ item.description }}</dd>
+            <dt>Description</dt>
+            <dd>{{ item.description }}</dd>
             {% endif %}
+
+            {% if item.image %}
+            <dt>Image</dt>
+            <dd><a href="{{ item.image.url }}">{% generateimage "thumbnail-large" source=item.image %}</a></dd>
+            {% endif %}
+
             <dt>Location</dt>
             <dd>
                 {% if item.location %}
@@ -29,10 +38,12 @@
                     (none set)
                 {% endif %}
             </dd>
+
             {% if item.notes %}
-                <dt>Notes</dt>
-                <dd>{{ item.notes }}</dd>
+            <dt>Notes</dt>
+            <dd>{{ item.notes }}</dd>
             {% endif %}
+
             <dt>Tags</dt>
             {% if item.tags.exists %}
                 {% for tag in item.tags.all %}
