@@ -5,3 +5,4 @@ django-crispy-forms~=1.8.1
 whitenoise~=5.0.1
 django-storages~=1.8
 google-cloud-storage~=1.23.0
+django-imagekit~=4.0.2
