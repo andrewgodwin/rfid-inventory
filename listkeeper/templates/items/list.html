@@ -20,9 +20,10 @@
             <a href="{{ item.urls.view }}">
                 {% if item.image %}
                     {% generateimage "thumbnail-small" source=item.image %}
+                {% else %}
+                    <div class="no-image">?</div>
                 {% endif %}
                 <span class="name">{{ item.name }}</span>
-                <span class="id">#{{ item.id }}</span>
             </a>
             <p class="description">{{ item.description }}</p>
         </div>

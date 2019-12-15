@@ -163,6 +163,17 @@ section {
         margin: 0 10px 0 0;
         float: left;
     }
+    .item .no-image {
+        margin: 0 10px 0 0;
+        float: left;
+        width: 50px;
+        height: 50px;
+        background: #eee;
+        text-align: center;
+        line-height: 50px;
+        font-size: 20px;
+        color: #ddd;
+    }
     .item .description {
         font-size: 85%;
         color: #333;
