@@ -7,7 +7,6 @@ import time
 from chafon import Reader, commands
 
 
-READ_GAP = 0.2
 SEND_GAP_ACTIVE = 1
 SEND_GAP_INACTIVE = 120
 
@@ -35,7 +34,6 @@ def main(serial_port, url, token, power, reader_type):
     reader.run(commands.SetPower(power))
     # Main detection loop
     while True:
-        time.sleep(READ_GAP)
         response = reader.run(commands.Inventory())
         seen_tags.update(["epc:%s" % tag for tag in response.tags])
         # If it's been enough time, update the server with what happened
