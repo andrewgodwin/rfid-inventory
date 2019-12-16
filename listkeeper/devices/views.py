@@ -1,4 +1,7 @@
+from bs4 import BeautifulSoup
+
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.views.generic import (
     CreateView,
@@ -22,6 +25,20 @@ class ViewDevice(LoginRequiredMixin, DetailView):
     model = Device
     template_name = "devices/view.html"
     extra_context = {"section": "devices"}
+    patch_ids = ["device-last-seen", "recent-reads"]
+
+    def get(self, request, *args, **kwargs):
+        # Don't handle non-patch requests
+        template_response = super().get(request, *args, **kwargs)
+        if not request.GET.get("patch", None):
+            return template_response
+        # OK, they want a patch, so render the template and extract the right pieces
+        template_response.render()
+        soup = BeautifulSoup(template_response.content, "html.parser")
+        json_response = {}
+        for id in self.patch_ids:
+            json_response[id] = " ".join(soup.find(id=id).decode_contents().split())
+        return JsonResponse(json_response)
 
 
 class EditDevice(LoginRequiredMixin, UpdateView):

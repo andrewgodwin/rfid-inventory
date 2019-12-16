@@ -7,3 +7,4 @@ django-storages~=1.8
 google-cloud-storage~=1.23.0
 django-imagekit~=4.0.2
 pillow~=6.2.1
+bs4~=4.8.1
