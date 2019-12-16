@@ -28,6 +28,7 @@ class Reader:
         crc16 = Crc("crc-16-mcrf4xx")
         crc16.update(packet)
         packet += struct.pack("<H", crc16.crcValue)
+        #print(["%02x" % x for x in packet])
         self.connection.write(packet)
 
     def receive_raw(self):
