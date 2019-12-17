@@ -53,6 +53,6 @@ def update_reads(device, tags):
                 read.item.set_location(device.location)
         read.save()
     # Set tags that are no longer visible to not present
-    DeviceRead.objects.filter(last_seen__lt=seen_time, present=True).update(
-        present=False
-    )
+    DeviceRead.objects.filter(
+        device=device, last_seen__lt=seen_time, present=True
+    ).update(present=False)
