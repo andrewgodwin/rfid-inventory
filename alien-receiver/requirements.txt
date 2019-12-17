@@ -1,0 +1,2 @@
+aiohttp-requests~=0.1.2
+click~=7.0
