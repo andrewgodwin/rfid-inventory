@@ -264,6 +264,17 @@ span.token {
     .recent-read .not-present {
         color: #fe8a71;
     }
+    .recent-read .rssi {
+        font-size: 80%;
+        vertical-align: middle;
+        color: white;
+        background:  #3da4ab;
+        padding: 1px 3px;
+        border-radius: 3px;
+    }
+    .recent-read .not-present .rssi {
+        background:  #fe8a71;
+    }
 
 /* Locations */
 

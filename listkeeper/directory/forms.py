@@ -103,10 +103,13 @@ class CreateItemForm(BaseItemForm):
     image = forms.ImageField(required=False)
 
     def save(self, **kwargs):
+        from devices.models import DeviceRead
+
         instance = super().save(**kwargs)
         # If we got a tag, add that too
         if self.cleaned_data["tag"]:
             instance.tags.create(id=self.cleaned_data["tag"])
+            DeviceRead.objects.filter(tag=added_tag).update(item=instance)
         # And an image
         if self.cleaned_data["image"]:
             instance.images.create(image=self.cleaned_data["image"])

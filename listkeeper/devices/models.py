@@ -92,6 +92,7 @@ class DeviceRead(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     last_seen = models.DateTimeField()
     present = models.BooleanField(default=False)
+    rssi = models.FloatField(blank=True, null=True)
 
     class Meta:
         unique_together = [("device", "tag")]

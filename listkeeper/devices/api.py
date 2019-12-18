@@ -31,20 +31,29 @@ def sync(request):
     return JsonResponse({"mode": "passive"})
 
 
-def update_reads(device, tags):
+def update_reads(device, tag_values):
     """
     Updates the device's DeviceRead objects with the new tags seen.
     """
     seen_time = timezone.now()
-    tags = set(tags)
+    tag_values = set(tag_values)
     # For each tag, update its record
-    for tag in tags:
+    for tag_value in tag_values:
+        # See if an RSSI is bundled in
+        if "/" in tag_value:
+            tag, rssi = tag_value.split("/", 1)
+        else:
+            tag, rssi = tag_value, None
+        # Clean the tag value
+        tag = tag.replace(" ", "").lower()
+        # Fetch the database row
         try:
             read = DeviceRead.objects.get(device=device, tag=tag)
         except DeviceRead.DoesNotExist:
             read = DeviceRead(device=device, tag=tag)
         read.last_seen = seen_time
         read.present = True
+        read.rssi = rssi
         # See if we can associate it with an item
         if read.directory_tag and read.directory_tag.item:
             read.item = read.directory_tag.item

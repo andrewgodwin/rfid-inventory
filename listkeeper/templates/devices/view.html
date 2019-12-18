@@ -33,11 +33,13 @@
                 {% if read.present %}
                     <span class="present">
                         <i class="fa fa-check" aria-hidden="true"></i> Present
+                        {% if read.rssi %}<span class="rssi">{{ read.rssi|floatformat:0 }}</span>{% endif %}
                         <small>{{ read.last_seen|naturaltime }}</small>
                     </span>
                 {% else %}
                     <span class="not-present">
                         <i class="fa fa-times" aria-hidden="true"></i> Not Present
+                        {% if read.rssi %}<span class="rssi">{{ read.rssi|floatformat:0 }}</span>{% endif %}
                         <small>Seen {{ read.last_seen|naturaltime }}</small>
                     </span>
                 {% endif %}
