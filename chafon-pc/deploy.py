@@ -13,7 +13,9 @@ from invoke import UnexpectedExit
 def main(host, url, token, device):
     connection = Connection(host)
     # Stop the service if it's running and installed
-    click.echo(click.style("Stopping any existing installation...", fg="green", bold=True))
+    click.echo(
+        click.style("Stopping any existing installation...", fg="green", bold=True)
+    )
     try:
         connection.sudo("systemctl stop rfid-client")
     except UnexpectedExit:
@@ -30,14 +32,20 @@ def main(host, url, token, device):
         with connection.cd("/srv/rfid-inventory"):
             connection.run("git pull")
     except UnexpectedExit:
-        connection.run("git clone http://www.github.com/andrewgodwin/rfid-inventory /srv/rfid-inventory")
+        connection.run(
+            "git clone http://www.github.com/andrewgodwin/rfid-inventory /srv/rfid-inventory"
+        )
     # Install packages
     click.echo(click.style("Installing Python packages...", fg="green", bold=True))
-    connection.sudo("pip3 install -r /srv/rfid-inventory/client-chafon/requirements.txt")
+    connection.sudo(
+        "pip3 install -r /srv/rfid-inventory/client-chafon/requirements.txt"
+    )
     # Write out a systemd unit file
     click.echo(click.style("Writing systemd unit file...", fg="green", bold=True))
     unit_file = unit_template.format(device=device, url=url, token=token).strip()
-    connection.sudo("bash -c \"echo '%s' > /etc/systemd/system/rfid-client.service\"" % unit_file)
+    connection.sudo(
+        "bash -c \"echo '%s' > /etc/systemd/system/rfid-client.service\"" % unit_file
+    )
     # Start it
     click.echo(click.style("Enabling and starting service...", fg="green", bold=True))
     connection.sudo("systemctl daemon-reload")

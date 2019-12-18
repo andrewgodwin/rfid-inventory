@@ -31,6 +31,7 @@ class Response:
             self.status,
         )
 
+
 class Command:
     """
     Basic unit of control for a reader.
@@ -53,5 +54,8 @@ class Command:
         reader.send_raw(self.address, self.command, self.data)
         address, command, status, data = reader.receive_raw()
         if command != self.command:
-            raise ValueError("Received response for wrong command (expected %02x, got %02x)" % (self.command, command))
+            raise ValueError(
+                "Received response for wrong command (expected %02x, got %02x)"
+                % (self.command, command)
+            )
         return self.response_class(address, command, status, data)

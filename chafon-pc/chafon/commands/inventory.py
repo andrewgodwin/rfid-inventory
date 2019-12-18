@@ -21,8 +21,8 @@ class Inventory(Command):
             # Use the extended-parameters format
             self.data = struct.pack(
                 "<BB",
-                0x04, # Q value  (roughly 0.5 * tag quantity),
-                0xff,  # Session (auto)
+                0x04,  # Q value  (roughly 0.5 * tag quantity),
+                0xFF,  # Session (auto)
             )
         reader.send_raw(self.address, self.command, self.data)
         try:
@@ -30,7 +30,11 @@ class Inventory(Command):
             while True:
                 # Get raw data
                 address, command, status, data = reader.receive_raw()
-                assert status in (STATUS.INVENTORY_OK, STATUS.INVENTORY_TIMEOUT, STATUS.INVENTORY_MORE_DATA), "Bad status %02x" % status
+                assert status in (
+                    STATUS.INVENTORY_OK,
+                    STATUS.INVENTORY_TIMEOUT,
+                    STATUS.INVENTORY_MORE_DATA,
+                ), ("Bad status %02x" % status)
                 # Decode tags
                 if reader.type == "rru2881":
                     tags.update(self.decode_tags_rssi(data))
@@ -42,7 +46,9 @@ class Inventory(Command):
             return InventoryResponse(address, command, status, tags)
         except NoTagError:
             # Create empty response
-            return InventoryResponse(self.address, self.command, STATUS.ERROR_NO_TAG, [])
+            return InventoryResponse(
+                self.address, self.command, STATUS.ERROR_NO_TAG, []
+            )
 
     def decode_tags_basic(self, data):
         """
@@ -53,11 +59,8 @@ class Inventory(Command):
         data = data[1:]
         for i in range(number_of_tags):
             epc_length = struct.unpack("<B", data[:1])[0]
-            tags.append("".join(
-                "%02x" % byte
-                for byte in data[1:epc_length + 1]
-            ))
-            data = data[epc_length + 1:]
+            tags.append("".join("%02x" % byte for byte in data[1 : epc_length + 1]))
+            data = data[epc_length + 1 :]
         assert not data
         return tags
 
@@ -70,11 +73,10 @@ class Inventory(Command):
         data = data[2:]
         for i in range(number_of_tags):
             epc_length = struct.unpack("<B", data[:1])[0]
-            tags.append("".join(
-                "%02x" % byte
-                for byte in data[1:epc_length + 1]
-            ))
-            data = data[epc_length + 2:]  # Last byte is the RSSI, which we ignore for now
+            tags.append("".join("%02x" % byte for byte in data[1 : epc_length + 1]))
+            data = data[
+                epc_length + 2 :
+            ]  # Last byte is the RSSI, which we ignore for now
         assert not data
         return tags
 
@@ -89,7 +91,4 @@ class InventoryResponse(Response):
         self.tags = tags
 
     def __repr__(self):
-        return "<%s %s tags>" % (
-            self.__class__.__name__,
-            len(self.tags)
-        )
+        return "<%s %s tags>" % (self.__class__.__name__, len(self.tags))

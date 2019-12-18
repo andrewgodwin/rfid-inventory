@@ -29,7 +29,10 @@ def main(serial_port, url, token, power, reader_type):
     seen_tags_time = 0
     # Verify reader info
     reader_info = reader.run(commands.GetReaderInformation())
-    assert reader_info.reader_type == reader_type, "The reader is type %s, not configured type %s" % (reader_info.reader_type, reader_type)
+    assert reader_info.reader_type == reader_type, (
+        "The reader is type %s, not configured type %s"
+        % (reader_info.reader_type, reader_type)
+    )
     # Set power
     reader.run(commands.SetPower(power))
     # Main detection loop
@@ -39,7 +42,9 @@ def main(serial_port, url, token, power, reader_type):
         # If it's been enough time, update the server with what happened
         time_since_send = time.time() - seen_tags_time
         tags_changed = seen_tags != last_seen_tags
-        if (tags_changed and time_since_send > SEND_GAP_ACTIVE) or time_since_send > SEND_GAP_INACTIVE:
+        if (
+            tags_changed and time_since_send > SEND_GAP_ACTIVE
+        ) or time_since_send > SEND_GAP_INACTIVE:
             synchronizer.sync(seen_tags)
             last_seen_tags = seen_tags
             seen_tags = set()

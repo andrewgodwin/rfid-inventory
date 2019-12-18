@@ -37,61 +37,25 @@ class STATUS:
     INVENTORY_TIMEOUT = 0x02
     INVENTORY_MORE_DATA = 0x03
     INVENTORY_FLASH_FULL = 0x04
-    ERROR_COMMAND_EXECUTE = 0xf9
-    ERROR_POOR_COMMS = 0xfa
-    ERROR_NO_TAG = 0xfb
-    ERROR_TAG_INTERNAL = 0xfc
-    ERROR_COMMAND_LENGTH = 0xfd
-    ERROR_ILLEGAL_COMMAND = 0xfe
-    ERROR_PARAMETER = 0xff
+    ERROR_COMMAND_EXECUTE = 0xF9
+    ERROR_POOR_COMMS = 0xFA
+    ERROR_NO_TAG = 0xFB
+    ERROR_TAG_INTERNAL = 0xFC
+    ERROR_COMMAND_LENGTH = 0xFD
+    ERROR_ILLEGAL_COMMAND = 0xFE
+    ERROR_PARAMETER = 0xFF
 
 
-TYPES = {
-    "ru5102": 0x08,
-    "rru2881": 0x0c,
-}
+TYPES = {"ru5102": 0x08, "rru2881": 0x0C}
 
 
 REGIONS = {
-    "user": {
-        "code": 0b0000,
-        "base": 902.6,
-        "step": 0.4,
-    },
-    "china2": {
-        "code": 0b0001,
-        "base": 920.125,
-        "step": 0.25,
-    },
-    "usa": {
-        "code": 0b0010,
-        "base": 902.75,
-        "step": 0.5,
-        "max_n": 49,
-    },
-    "korea": {
-        "code": 0b0011,
-        "base": 917.1,
-        "step": 0.2,
-    },
-    "eu": {
-        "code": 0b0100,
-        "base": 865.1,
-        "step": 0.2,
-    },
-    "ukraine": {
-        "code": 0b0110,
-        "base": 868.0,
-        "step": 0.1,
-    },
-    "peru": {
-        "code": 0b0111,
-        "base": 916.2,
-        "step": 0.9,
-    },
-    "china1": {
-        "code": 0b1000,
-        "base": 840.125,
-        "step": 0.25,
-    }
+    "user": {"code": 0b0000, "base": 902.6, "step": 0.4},
+    "china2": {"code": 0b0001, "base": 920.125, "step": 0.25},
+    "usa": {"code": 0b0010, "base": 902.75, "step": 0.5, "max_n": 49},
+    "korea": {"code": 0b0011, "base": 917.1, "step": 0.2},
+    "eu": {"code": 0b0100, "base": 865.1, "step": 0.2},
+    "ukraine": {"code": 0b0110, "base": 868.0, "step": 0.1},
+    "peru": {"code": 0b0111, "base": 916.2, "step": 0.9},
+    "china1": {"code": 0b1000, "base": 840.125, "step": 0.25},
 }
