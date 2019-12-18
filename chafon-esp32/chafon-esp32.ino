@@ -24,6 +24,7 @@ Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, -1);
 WiFiMulti WiFiMulti;
 
 String tags[100];
+uint8_t rssis[100];
 uint8_t tagsPointer = 0;
 
 void setup() {
@@ -76,9 +77,9 @@ void loop() {
   if (sensorVal == HIGH) {
     tagsPointer = 0;
     scan();
-    printString((String("[") + tagsPointer + "]").c_str());
     sync();
   }
+  WiFiMulti.run();
 }
 
 // Runs a tag scan and returns EPCs
@@ -111,6 +112,8 @@ void scan() {
         }
         epc.concat(String(epcByte, HEX));
       }
+      // Fetch RSSI
+      uint8_t rssi = buffer[bufferPointer++];
       // Ensure the tag isn't already seen
       bool tagSeen = false;
       for (uint8_t j = 0; j < tagsPointer; j++) {
@@ -118,9 +121,10 @@ void scan() {
           tagSeen = true;
         }
       }
-      if (!tagSeen) tags[tagsPointer++] = epc;
-      // Skip over RSSI
-      bufferPointer++;
+      if (!tagSeen) {
+        tags[tagsPointer] = epc;
+        rssis[tagsPointer++] = rssi;
+      }
     }
     // Verify things lined up
     if (bufferPointer != bufferLength) printError("Buffer mismatch");
@@ -130,21 +134,20 @@ void scan() {
 void sync() {
   // Send it
   WiFiClientSecure *client = new WiFiClientSecure;
-  setWifiMessage("[WiFi Upl]");
-  if(client) {
-    //client -> setCACert(rootCACertificate);
-
+  setWifiMessage("[HTTP -->]");
+  if (client) {
     {
       // Scoping block for HTTPClient
       HTTPClient https;
   
       Serial.println("[HTTPS] Begin");
       if (https.begin(*client, url)) {  // HTTPS
-        Serial.println("[HTTPS] POST");
+        Serial.print("[HTTPS] POST ");
+        Serial.println(url);
         // start connection and send HTTP header
         String body = String("{\"token\":\"") + token + String("\",\"tags\":[");
         for (uint8_t i = 0; i < tagsPointer; i++) {
-          body.concat(String("\"epc:") + tags[i] + "\"");
+          body.concat(String("\"epc:") + tags[i] + "/" + rssis[i] + "\"");
           if (i < tagsPointer - 1) {
             body.concat(",");
           }
@@ -155,18 +158,20 @@ void sync() {
   
         // httpCode will be negative on error
         if (httpCode > 0) {
-          setWifiMessage("[WiFi OK]");
-          // HTTP header has been send and Server response header has been handled
+          setWifiMessage("[HTTP OK]");
+          // HTTP header has been sent and Server response header has been handled
           Serial.printf("[HTTPS] Status: %d\n", httpCode);
-  
-          // file found at server
+          // All good!
           if (httpCode == HTTP_CODE_OK || httpCode == HTTP_CODE_MOVED_PERMANENTLY) {
             String payload = https.getString();
             Serial.println(payload);
+          } else {
+            setWifiMessage("[HTTP BAD]");
+            Serial.printf("[HTTPS] Bad status code: %s\n", https.errorToString(httpCode).c_str());
           }
         } else {
-          setWifiMessage("[WiFi ERR]");
-          Serial.printf("[HTTPS] GET... failed, error: %s\n", https.errorToString(httpCode).c_str());
+          setWifiMessage("[HTTP ERR]");
+          Serial.printf("[HTTPS] Failed: %s\n", https.errorToString(httpCode).c_str());
         }
   
         https.end();
