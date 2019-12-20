@@ -62,6 +62,7 @@ void setup() {
   pinMode(BUTTON_GROUND, OUTPUT);
   digitalWrite(BUTTON_GROUND, HIGH);
 
+  // Set the power to max (30)
   uint8_t data[] = {30};
   sendCommand(0x2f, data, 1);
   uint8_t buffer[255];
@@ -78,6 +79,7 @@ void loop() {
     tagsPointer = 0;
     scan();
     sync();
+    printString("[Idle]");
   }
   WiFiMulti.run();
 }
