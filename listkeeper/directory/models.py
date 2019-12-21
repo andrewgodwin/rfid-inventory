@@ -1,3 +1,6 @@
+import os
+import random
+import string
 import uuid
 
 import urlman
@@ -102,6 +105,16 @@ class Item(models.Model):
         return None
 
 
+def image_upload_path(instance, filename):
+    now = timezone.now()
+    return "%s/%s-%s%s" % (
+        now.strftime("items/images/%Y%m"),
+        instance.item.pk,
+        "".join(random.choice(string.ascii_letters) for i in range(8)),
+        os.path.splitext(filename)[1].lower() or ".bin",
+    )
+
+
 class ItemImage(models.Model):
     """
     Images of an item. They have an order; the first one is considered primary.
@@ -110,7 +123,7 @@ class ItemImage(models.Model):
     item = models.ForeignKey(
         "directory.Item", related_name="images", on_delete=models.CASCADE
     )
-    image = models.ImageField(upload_to="items/images/%Y%m/%d/")
+    image = models.ImageField(upload_to=image_upload_path)
     order = models.IntegerField(default=0)
 
 
