@@ -38,7 +38,7 @@ def main(host, url, token, device):
     # Install packages
     click.echo(click.style("Installing Python packages...", fg="green", bold=True))
     connection.sudo(
-        "pip3 install -r /srv/rfid-inventory/client-chafon/requirements.txt"
+        "pip3 install -r /srv/rfid-inventory/chafon-pc/requirements.txt"
     )
     # Write out a systemd unit file
     click.echo(click.style("Writing systemd unit file...", fg="green", bold=True))
@@ -61,7 +61,7 @@ Description=RFID scanner client
 Type=simple
 Restart=always
 RestartSec=5
-ExecStart=/usr/bin/python3 /srv/rfid-inventory/client-chafon/client.py {device} {url} {token}
+ExecStart=/usr/bin/python3 /srv/rfid-inventory/chafon-pc/client.py {device} {url} {token}
 
 [Install]
 WantedBy=multi-user.target
