@@ -18,4 +18,4 @@ RUN pip install -r requirements.txt
 
 # Install app
 ADD receiver.py .
-ENTRYPOINT ["python3", "receiver.py"]
+ENTRYPOINT ["python3", "-u", "receiver.py"]
