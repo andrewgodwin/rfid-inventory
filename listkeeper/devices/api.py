@@ -3,7 +3,7 @@ from django.http import Http404, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.utils import timezone
 
-from .models import Device, DeviceRead
+from .models import Device, DeviceRead, DeviceWrite
 
 
 @csrf_exempt
@@ -25,10 +25,16 @@ def sync(request):
         return JsonResponse({"error": "Invalid token"}, status=400)
     # Handle any RFID tags it's seen
     update_reads(device, data.get("tags", []))
+    # Handle any writes
+    update_writes(device, data.get("written", []))
     # Ping that we saw it
     Device.objects.filter(id=device.id).update(last_seen=timezone.now())
+    # Grab the next pending write
+    write = None
+    if device.writes.exists():
+        write = device.writes.order_by("created")[0].tag
     # Send back a mode
-    return JsonResponse({"mode": "passive"})
+    return JsonResponse({"mode": "passive", "write": write})
 
 
 def update_reads(device, tag_values):
@@ -65,3 +71,10 @@ def update_reads(device, tag_values):
     DeviceRead.objects.filter(
         device=device, last_seen__lt=seen_time, present=True
     ).update(present=False)
+
+
+def update_writes(device, tag_values):
+    """
+    Updates the device's DeviceWrite objects to remove any that were written
+    """
+    DeviceWrite.objects.filter(device=device, tag__in=tag_values).delete()

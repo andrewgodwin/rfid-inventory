@@ -44,6 +44,8 @@ class Device(models.Model):
         delete = "{view}delete/"
         set_assigning = "{view}set-mode/assigning/"
         set_passive = "{view}set-mode/passive/"
+        add_write = "{view}add-write/"
+        add_random_write = "{view}add-random-write/"
 
     def __str__(self):
         return "#%s: %s" % (self.id, self.name)
@@ -110,3 +112,21 @@ class DeviceRead(models.Model):
             return Tag.objects.select_related("item").get(id=self.tag)
         except Tag.DoesNotExist:
             return None
+
+
+class DeviceWrite(models.Model):
+    """
+    Queue of tags to be written by a device.
+
+    Only some devices support tag writes.
+    """
+
+    device = models.ForeignKey(
+        "devices.Device", on_delete=models.CASCADE, related_name="writes"
+    )
+    tag = models.CharField(
+        max_length=255,
+        help_text="Type prefix, colon, hex value of tag (e.g. epc:f376ce13434a2b)",
+    )
+
+    created = models.DateTimeField(auto_now_add=True)

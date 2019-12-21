@@ -17,6 +17,8 @@
         {% else %}
             <a href="{{ device.urls.set_passive }}"><i class="fa fa-eye" aria-hidden="true"></i> Switch to Passive</a>
         {% endif %}
+        <a href="{{ device.urls.add_write }}"><i class="fa fa-download" aria-hidden="true"></i> Write Tag</a>
+        <a href="{{ device.urls.add_random_write }}"><i class="fa fa-download" aria-hidden="true"></i> Write Random Tag</a>
         <a href="{{ device.urls.delete }}" class="right dangerous"><i class="fa fa-trash" aria-hidden="true"></i> Delete</a>
         <a href="{{ device.urls.edit }}" class="right"><i class="fa fa-pencil" aria-hidden="true"></i> Edit</a>
     </nav>
@@ -84,6 +86,15 @@
                 </dd>
             {% endif %}
         </dl>
+    </section>
+
+    <section id="writes">
+        <h2>Write Queue</h2>
+        {% for write in device.writes.all %}
+            <div class="write">{{ write.tag }}</div>
+        {% empty %}
+            <div class="write empty">(no writes queued)</div>
+        {% endfor %}
     </section>
 
 {% endblock content %}
