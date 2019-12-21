@@ -110,7 +110,7 @@ class ItemImage(models.Model):
     item = models.ForeignKey(
         "directory.Item", related_name="images", on_delete=models.CASCADE
     )
-    image = models.ImageField(upload_to="items/images/%Y%m/")
+    image = models.ImageField(upload_to="items/images/%Y%m/%d/")
     order = models.IntegerField(default=0)
 
 
