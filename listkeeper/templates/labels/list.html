@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% load imagekit %}
+
+{% block content %}
+
+    <nav class="sub">
+        <a href="/labels/create/"><i class="fa fa-plus-square" aria-hidden="true"></i> Create Label</a>
+    </nav>
+
+    {% for label in labels %}
+        <div class="list-item">
+            <small class="right">
+                (x items)
+            </small>
+            <a href="{{ label.urls.view }}">
+                <span class="name">{{ label.name }}</span>
+            </a>
+        </div>
+    {% empty %}
+        <div class="list-item empty">No labels yet.</div>
+    {% endfor %}
+
+{% endblock content %}

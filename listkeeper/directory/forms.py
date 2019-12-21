@@ -1,6 +1,6 @@
 from django import forms
 
-from .models import Item, Location
+from .models import Item, Label, Location
 
 
 class LocationForm(forms.ModelForm):
@@ -51,16 +51,34 @@ class ReparentForm(forms.Form):
 
 
 class BaseItemForm(forms.ModelForm):
+    """
+    Parent item form for both create and edit
+    """
+
+    image = forms.ImageField(required=False)
+    labels = forms.CharField(required=False, widget=forms.Textarea)
+
     class Meta:
         model = Item
         fields = ["name", "description", "location", "serial", "notes"]
         widgets = {"description": forms.TextInput(), "serial": forms.TextInput()}
 
+    def save_labels(self, instance):
+        """
+        Saves the labels the user requested as names into a ManyToMany
+        """
+        wanted_label_names = set(
+            line.strip()
+            for line in self.cleaned_data.get("labels", "").split("\n")
+            if line.strip()
+        )
+        wanted_labels = Label.objects.filter(name__in=wanted_label_names)
+        instance.labels.set(wanted_labels)
+
 
 class EditItemForm(BaseItemForm):
 
     tags = forms.CharField(required=False, widget=forms.Textarea)
-    image = forms.ImageField(required=False)
 
     def __init__(self, *args, **kwargs):
         # Grab the tags off of the Tag model
@@ -92,6 +110,8 @@ class EditItemForm(BaseItemForm):
         if self.cleaned_data["image"]:
             instance.images.all().delete()
             instance.images.create(image=self.cleaned_data["image"])
+        # Handle labels
+        self.save_labels(instance)
         return instance
 
 
@@ -100,7 +120,6 @@ class CreateItemForm(BaseItemForm):
     tag = forms.CharField(
         required=False, help_text="Optional tag to immediately associate with"
     )
-    image = forms.ImageField(required=False)
 
     def save(self, **kwargs):
         from devices.models import DeviceRead
@@ -113,4 +132,6 @@ class CreateItemForm(BaseItemForm):
         # And an image
         if self.cleaned_data["image"]:
             instance.images.create(image=self.cleaned_data["image"])
+        # And labels
+        self.save_labels(instance)
         return instance

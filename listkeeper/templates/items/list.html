@@ -24,6 +24,11 @@
                     <div class="no-image">?</div>
                 {% endif %}
                 <span class="name">{{ item.name }}</span>
+                <ul class="labels">
+                    {% for label in item.labels.all %}
+                    <li>{{ label }}</li>
+                    {% endfor %}
+                </ul>
             </a>
             <p class="description">{{ item.description }}</p>
         </div>

@@ -44,6 +44,15 @@
             <dd>{{ item.notes }}</dd>
             {% endif %}
 
+            <dt>Labels</dt>
+            {% if item.labels.exists %}
+                {% for label in item.labels.all %}
+                    <dd>{{ label }}</dd>
+                {% endfor %}
+            {% else %}
+                <dd class="empty">(no labels assigned)</dd>
+            {% endif %}
+
             <dt>Tags</dt>
             {% if item.tags.exists %}
                 {% for tag in item.tags.all %}

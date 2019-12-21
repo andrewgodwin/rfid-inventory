@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% load crispy_forms_tags %}
+{% load humanize %}
+{% load static %}
+{% load imagekit %}
+
+{% block content %}
+
+    <h1>{{ label.name }}</h1>
+
+    <nav class="sub sub-light">
+        <a href="{{ label.urls.delete }}" class="right dangerous"><i class="fa fa-trash" aria-hidden="true"></i> Delete</a>
+        <a href="{{ label.urls.edit }}" class="right"><i class="fa fa-pencil" aria-hidden="true"></i> Edit</a>
+    </nav>
+
+    <section id="labels">
+        <h2>Items</h2>
+        
+    </section>
+
+{% endblock content %}

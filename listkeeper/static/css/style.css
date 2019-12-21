@@ -179,6 +179,21 @@ section {
         color: #333;
         margin: 5px 0 0 0;
     }
+    .item .labels {
+        display: inline;
+        margin: 0 0 0 7px;
+        padding: 0;
+        list-style-type: none;
+    }
+    .item .labels li {
+        display: inline;
+        margin: 0 5px 0 0;
+        padding: 2px 5px;
+        background: #444;
+        color: white;
+        border-radius: 3px;
+        font-size: 80%;
+    }
 
 #details {
 }
@@ -278,22 +293,24 @@ span.token {
 
 /* Locations */
 
-.location {
-    padding: 10px 0 10px 15px;
-    border-bottom: 1px solid #ccc;
-}
-    .location small {
-        color: #555;
-        float: right;
-        margin: 0 15px 0 0;
-    }
-
 .reparent .old {
     color: #555;
 }
 .reparent .new {
     font-weight: bold;
 }
+
+/* Generic list pages */
+
+.list-item {
+    padding: 10px 0 10px 15px;
+    border-bottom: 1px solid #ccc;
+}
+    .list-item small {
+        color: #555;
+        float: right;
+        margin: 0 15px 0 0;
+    }
 
 /* Login */
 

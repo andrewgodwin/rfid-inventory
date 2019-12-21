@@ -120,13 +120,22 @@ class Label(models.Model):
     called "tag", but that's not a great word to re-use here.
     """
 
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, unique=True)
 
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
+    class urls(urlman.Urls):
+        base = "/labels/"
+        view = "{base}{self.id}/"
+        edit = "{view}edit/"
+        delete = "{view}delete/"
+
     def __str__(self):
         return self.name
+
+    def get_absolute_url(self):
+        return self.urls.view
 
 
 class Location(models.Model):
