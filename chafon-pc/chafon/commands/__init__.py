@@ -7,3 +7,4 @@ from .reader import (
     SetPower,
     AcoustoOpticControl,
 )
+from .write import WriteEPC
