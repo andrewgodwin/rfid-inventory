@@ -11,7 +11,7 @@
             <p class="delete-warning">
                 Are you sure you want to delete {{ device.name }} (ID {{ device.id }})?
             </p>
-            <a class="button cancel" href="{{ device.urls.view }}">Cancel</a>
+            <a class="button cancel" href="javascript:history.back()">Cancel</a>
             <button class="dangerous">Delete</button>
         </form>
     </section>

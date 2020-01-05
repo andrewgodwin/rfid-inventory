@@ -11,7 +11,7 @@
             <p class="delete-warning">
                 Are you sure you want to delete {{ item.name }} (ID {{ item.id }})?
             </p>
-            <a class="button cancel" href="{{ item.urls.view }}">Cancel</a>
+            <a class="button cancel" href="javascript:history.back()">Cancel</a>
             <button class="dangerous">Delete</button>
         </form>
     </section>

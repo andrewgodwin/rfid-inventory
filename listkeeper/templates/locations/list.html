@@ -9,13 +9,30 @@
         <a href="/locations/reparent/"><i class="fa fa-sitemap" aria-hidden="true"></i> Reparent</a>
     </nav>
 
-    {% for location in locations %}
-        <div class="list-item">
-            <a href="{{ location.urls.view }}">{{ location }}</a>
-            <small>{{ location.items_count }} item{{ location.items_count|pluralize }}</small>
-        </div>
-    {% empty %}
-        <div class="list-item empty">No locations yet.</div>
-    {% endfor %}
+    <table class="list">
+        <tr>
+            <th>Name</th>
+            <th>Items</th>
+            <th class="actions">Actions</th>
+        </tr>
+        {% for location in locations %}
+        <tr class="location">
+            <td class="name">
+                <a href="{{ location.urls.view }}">{{ location }}</a>
+            </td>
+            <td class="items">
+                <a href="{{ location.urls.items }}">{{ location.items_count }} item{{ location.items_count|pluralize }}</a>
+            </td>
+            <td class="actions">
+                <a href="{{ location.urls.view }}" title="View"><i class="fa fa-eye" aria-hidden="true"></i></a>
+                <a href="{{ location.urls.items }}" title="Items"><i class="fa fa-list" aria-hidden="true"></i></a>
+                <a href="{{ location.urls.edit }}" title="Edit"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+            </td>
+        </tr>
+        {% empty %}
+            <tr class="empty"><td colspan="3">No locations yet.</td></tr>
+        {% endfor %}
+    </table>
+
 
 {% endblock content %}

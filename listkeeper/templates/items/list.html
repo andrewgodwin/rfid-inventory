@@ -8,32 +8,56 @@
         <a href="/items/create/"><i class="fa fa-plus-square" aria-hidden="true"></i> Create Item</a>
     </nav>
 
-    {% for item in items %}
-        <div class="item">
-            <small class="right">
-                {% if item.location %}
-                    <a href="{{ item.location.urls.items }}">{{ item.location.name }}</a>
-                {% else %}
-                    (no location)
-                {% endif %}
-            </small>
-            <a href="{{ item.urls.view }}">
+    <table class="list">
+        <tr>
+            <th></th>
+            <th>Item</th>
+            <th>Location</th>
+            <th>Last Seen</th>
+            <th class="actions">Actions</th>
+        </tr>
+        {% for item in items %}
+        <tr class="item">
+            <td class="image">
                 {% if item.image %}
                     {% generateimage "thumbnail-small" source=item.image %}
                 {% else %}
                     <div class="no-image">?</div>
                 {% endif %}
-                <span class="name">{{ item.name }}</span>
+            </td>
+            <td class="name">
+                <a href="{{ item.urls.view }}">
+                    <span class="name">{{ item.name }}</span>
+                </a>
                 <ul class="labels">
                     {% for label in item.labels.all %}
                     <li>{{ label }}</li>
                     {% endfor %}
                 </ul>
-            </a>
-            <p class="description">{{ item.description }}</p>
-        </div>
+                <p class="description">{{ item.description }}</p>
+            </td>
+            <td class="location">
+                {% if item.location %}
+                    <a href="{{ item.location.urls.items }}">{{ item.location.name }}</a>
+                {% else %}
+                    (no location)
+                {% endif %}
+            </td>
+            <td class="last_seen">
+                {% if item.last_seen %}
+                    {{ item.last_seen|timesince }}
+                {% else %}
+                    (never)
+                {% endif %}
+            </td>
+            <td class="actions">
+                <a href="{{ item.urls.view }}" title="View"><i class="fa fa-eye" aria-hidden="true"></i></a>
+                <a href="{{ item.urls.edit }}" title="Edit"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+            </td>
+        </tr>
     {% empty %}
-        <div class="item empty">No items yet.</div>
+        <tr class="empty"><td colspan="4">No items yet.</td></tr>
     {% endfor %}
+    </table>
 
 {% endblock content %}

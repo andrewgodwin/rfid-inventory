@@ -8,17 +8,27 @@
         <a href="/labels/create/"><i class="fa fa-plus-square" aria-hidden="true"></i> Create Label</a>
     </nav>
 
-    {% for label in labels %}
-        <div class="list-item">
-            <small class="right">
-                (x items)
-            </small>
-            <a href="{{ label.urls.view }}">
-                <span class="name">{{ label.name }}</span>
-            </a>
-        </div>
+    <table class="list">
+        <tr>
+            <th>Label</th>
+            <th>Items</th>
+            <th class="actions">Actions</th>
+        </tr>
+        {% for label in labels %}
+        <tr class="label">
+            <td class="name">
+                {{ label.name }}
+            </td>
+            <td class="items">
+                {{ label.items.count }}
+            </td>
+            <td class="actions">
+                <a href="{{ label.urls.edit }}" title="Edit"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+                <a href="{{ label.urls.delete }}" title="Delete"><i class="fa fa-trash" aria-hidden="true"></i></a>
+            </td>
+        </tr>
     {% empty %}
-        <div class="list-item empty">No labels yet.</div>
+        <tr class="empty"><td colspan="3">No labels yet.</td></tr>
     {% endfor %}
 
 {% endblock content %}

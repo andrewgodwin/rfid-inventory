@@ -11,7 +11,7 @@
         <form action="." method="POST" class="create create-location">
             {{ form|crispy }}
             {% csrf_token %}
-            <a class="button cancel" href="{{ location.urls.view }}">Cancel</a>
+            <a class="button cancel" href="javascript:history.back()">Cancel</a>
             <button>Save</button>
         </form>
     </section>

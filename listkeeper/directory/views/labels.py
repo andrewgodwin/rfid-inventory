@@ -22,12 +22,6 @@ class ListLabels(LoginRequiredMixin, ListView):
     extra_context = {"section": "labels"}
 
 
-class ViewLabel(LoginRequiredMixin, DetailView):
-    model = Label
-    template_name = "labels/view.html"
-    extra_context = {"section": "labels"}
-
-
 class EditLabel(LoginRequiredMixin, UpdateView):
     model = Label
     fields = ["name"]
@@ -45,4 +39,5 @@ class CreateLabel(LoginRequiredMixin, CreateView):
 class DeleteLabel(LoginRequiredMixin, DeleteView):
     model = Label
     template_name = "labels/delete.html"
+    extra_context = {"section": "labels"}
     success_url = "/labels/"

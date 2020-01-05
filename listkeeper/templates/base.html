@@ -9,11 +9,14 @@
     <link rel="stylesheet" href="/static/css/normalize.css" type="text/css" />
     <link rel="stylesheet" href="/static/css/style.css" type="text/css" media="screen" />
 
+    <link href="https://fonts.googleapis.com/css?family=Montserrat&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Roboto&amp;display=swap" rel="stylesheet">
     <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.0.12/dist/css/select2.min.css" rel="stylesheet" />
 
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha256-pasqAKBDmFT4eHoN2ndd6lN370kFiGUFyTiUHWhU7k8=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.0.12/dist/js/select2.min.js"></script>
     {% block extra_head %}{% endblock %}
 </head>
 <body class="section-{{ section }}">
@@ -23,10 +26,12 @@
     <header>
         <a href="/" class="logo"><b>rfid</b> inventory</a>
         <nav>
-            <a href="/items/"{% if section == "items" %} class="selected"{% endif %}>Items</a>
-            <a href="/locations/"{% if section == "locations" %} class="selected"{% endif %}>Locations</a>
-            <a href="/devices/"{% if section == "devices" %} class="selected"{% endif %}>Devices</a>
-            <a href="/labels/"{% if section == "labels" %} class="selected"{% endif %}>Labels</a>
+            <h2>Inventory</h2>
+            <a href="/items/" class="{% if section == "items" %}selected{% endif %}">Items</a>
+            <h2>Settings</h2>
+            <a href="/devices/" class="{% if section == "devices" %}selected{% endif %}">Devices</a>
+            <a href="/labels/" class="{% if section == "labels" %}selected{% endif %}">Labels</a>
+            <a href="/locations/" class="{% if section == "locations" %}selected{% endif %}">Locations</a>
         </nav>
     </header>
 

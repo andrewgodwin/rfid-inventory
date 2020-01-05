@@ -1,7 +1,12 @@
 /* General styles */
 
+html {
+    height: 100%;
+}
+
 body {
     font-family: sans-serif;
+    height: 100%;
 }
 
 a {
@@ -15,43 +20,63 @@ a {
 
 
 header {
-    height: 40px;
-    background: #4a4e4d    ;
+    width: 200px;
+    height: 100%;
+    position: fixed;
+    background: #222725;
     color: #ffffff;
 }
     header .logo {
         display: block;
-        float: right;
-        line-height: 40px;
         text-decoration: none;
         color: #ffffff;
-        text-align: right;
-        padding: 0 10px 0 0;
-        font-size: 120%;
+        text-align: center;
+        padding: 20px 0 20px 0;
+        font-size: 140%;
         font-family: 'Roboto', sans-serif;
     }
     header nav {
-        margin: 0 0 0 15px;
+        margin: 0;
+        font-family: 'Montserrat', sans-serif;
+    }
+    header nav h2 {
+        text-transform: uppercase;
+        font-size: 70%;
+        color: rgba(255, 255, 255, 0.5);
+        padding: 0 10px 6px 10px;
+        margin: 25px 0 0 0;
+        /*border-bottom: 1px solid rgba(255, 255, 255, 0.1);*/
+        box-shadow: 0 11px 0 -10px rgba(255, 255, 255, 0.1);
     }
     header nav a {
-        display: inline-block;
-        line-height: 20px;
-        text-align: center;
-        font-weight: 600;
-        text-transform: uppercase;
+        display: block;
+        line-height: 200%;
+        text-align: left;
         color: #ffffff;
-        padding: 6px 1px 3px 1px;
-        border-top: 4px solid #4a4e4d;
-        margin: 0 20px 0 0px;
-        font-family: 'Roboto', sans-serif;
+        font-size: 90%;
+        padding: 3px 10px 2px 10px;
+        margin: 0;
+        /*border-bottom: 1px solid rgba(255, 255, 255, 0.1);*/
+        border-right: 5px solid transparent;
+        box-shadow: 0 11px 0 -10px rgba(255, 255, 255, 0.1);
+    }
+    header nav a.selected {
+        background: white;
+        color: #222725;
+        font-weight: bold;
+        box-shadow: none;
     }
     header nav a:hover {
-        border-top: 4px solid #3da4ab;
+        /*background: rgba(255, 255, 255, 0.1);*/
+        border-right: 5px solid white;
+        /*font-weight: bold;*/
     }
-    header nav a.selected,
-    header nav a.selected:hover {
-        border-top: 4px solid #3da4ab;
-    }
+
+.content {
+    max-width: 1000px;
+    margin: 0 0 0 200px;
+    padding: 20px;
+}
 
 h1 {
     background: #12919D;
@@ -59,6 +84,7 @@ h1 {
     color: rgba(255, 255, 255, 1);
     padding: 10px 15px;
     margin: 0;
+    border-radius: 3px 3px 0 0;
 }
     h1 small {
         font-size: 50%;
@@ -67,13 +93,20 @@ h1 {
     }
 
 nav.sub {
+    width: 100%;
+    box-sizing: border-box;
     background: #3da4ab;
+    border-radius: 3px;
     height: 36px;
     line-height: 30px;
     color: rgba(255, 255, 255, 0.7);
     padding: 0 7px;
+    margin: 0 0 20px 0;
     overflow: none;
 }
+    h1 + nav.sub {
+        border-radius: 0 0 3px 3px;
+    }
     nav.sub a {
         color: rgba(255, 255, 255, 0.7);
         float: left;
@@ -92,6 +125,54 @@ nav.sub {
     nav.sub a.dangerous:hover {
         color: rgba(255, 255, 255, 1);
         background: #fe8a71;
+    }
+
+table.list {
+    width: 100%;
+    border-collapse: collapse;
+    box-sizing: border-box;
+}
+    table.list tr:nth-child(n+2) {
+        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    }
+    table.list th {
+        color: #ccc;
+        text-transform: uppercase;
+        font-size: 90%;
+        text-align: left;
+        padding: 0 10px 5px 0;
+    }
+    table.list td {
+        padding: 7px 10px 7px 0;
+    }
+    table.list td.name small {
+        display: block;
+        margin: 3px 0 0 0;
+        color: rgba(0, 0, 0, 0.6);
+    }
+    table.list td.name .id {
+        color: #777;
+        font-size: 80%;
+        margin-right: 4px;
+    }
+    table.list th.right,
+    table.list td.right,
+    table.list th.actions,
+    table.list td.actions {
+        text-align: right;
+        padding-right: 0;
+    }
+    table.list td.actions a {
+        color: rgba(0, 0, 0, 0.5);
+        font-size: 120%;
+        padding: 5px;
+        border: 1px solid transparent;
+        border-radius: 3px;
+        margin-right: -4px;
+    }
+    table.list td.actions a:hover {
+        border: 1px solid #12919D;
+        color: #12919D;
     }
 
 ul.messages {
@@ -119,8 +200,8 @@ section {
     display: inline-block;
     vertical-align: top;
     width: 400px;
-    padding: 10px 15px;
-    margin: 10px 0;
+    padding: 0;
+    margin: 0 20px 20px 0;
 }
     section h2 {
         color: #12919D;
@@ -138,34 +219,17 @@ section {
 
 /* Items */
 
-.item {
-    padding: 10px 0 10px 15px;
-    height: 50px;
-    border-bottom: 1px solid #ccc;
-    font-size: 110%;
+tr.item {
 }
-    .item .name {
-        display: inline-block;
-        margin: 3px 0 0 0;
+    tr.item td.image {
+        width: 50px;
     }
-    .item .id {
+    tr.item .id {
         color: #777;
         margin-right: 5px;
         font-size: 75%;
     }
-    .item small {
-        color: #555;
-        float: right;
-        margin: 0 15px 0 0;
-        line-height: 50px;
-    }
-    .item img {
-        margin: 0 10px 0 0;
-        float: left;
-    }
-    .item .no-image {
-        margin: 0 10px 0 0;
-        float: left;
+    tr.item .no-image {
         width: 50px;
         height: 50px;
         background: #eee;
@@ -174,18 +238,18 @@ section {
         font-size: 20px;
         color: #ddd;
     }
-    .item .description {
+    tr.item .description {
         font-size: 85%;
         color: #333;
         margin: 5px 0 0 0;
     }
-    .item .labels {
+    tr.item .labels {
         display: inline;
         margin: 0 0 0 7px;
         padding: 0;
         list-style-type: none;
     }
-    .item .labels li {
+    tr.item .labels li {
         display: inline;
         margin: 0 5px 0 0;
         padding: 2px 5px;
@@ -225,19 +289,8 @@ section {
 
 /* Devices */
 
-.device {
-    padding: 10px 0 10px 15px;
-    border-bottom: 1px solid #ccc;
+tr.device {
 }
-    .device .id {
-        color: #777;
-        margin-right: 5px;
-    }
-    .device small {
-        color: #555;
-        float: right;
-        margin: 0 15px 0 0;
-    }
 
 span.token {
     padding: 3px 5px;

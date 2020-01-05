@@ -49,7 +49,6 @@ urlpatterns = [
     # Labels
     path("labels/", labels.ListLabels.as_view()),
     path("labels/create/", labels.CreateLabel.as_view()),
-    path("labels/<int:pk>/", labels.ViewLabel.as_view()),
     path("labels/<int:pk>/edit/", labels.EditLabel.as_view()),
     path("labels/<int:pk>/delete/", labels.DeleteLabel.as_view()),
     # API URLs

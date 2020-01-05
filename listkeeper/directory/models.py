@@ -150,6 +150,28 @@ class Label(models.Model):
     def get_absolute_url(self):
         return self.urls.view
 
+    @classmethod
+    def normalise_name(cls, name):
+        return name.lower().replace(" ", "-").replace("_", "-")
+
+    @classmethod
+    def get_with_names(cls, names):
+        """
+        Returns a list of Label objects with the given names, creating them
+        if needed.
+        """
+        names = [cls.normalise_name(name) for name in names]
+        existing = cls.objects.filter(name__in=names)
+        result = []
+        for name in names:
+            for label in existing:
+                if label.name == name:
+                    result.append(label)
+                    break
+            else:
+                result.append(cls.objects.create(name=name))
+        return result
+
 
 class Location(models.Model):
     """

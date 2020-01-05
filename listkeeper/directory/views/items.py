@@ -17,7 +17,7 @@ def index(request):
 
 
 class ListItems(LoginRequiredMixin, ListView):
-    queryset = Item.objects.select_related("location").order_by("name")
+    queryset = Item.objects.select_related("location").prefetch_related("labels", "images").order_by("name")
     template_name = "items/list.html"
     context_object_name = "items"
     extra_context = {"section": "items"}

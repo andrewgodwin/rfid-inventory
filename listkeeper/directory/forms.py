@@ -56,12 +56,21 @@ class BaseItemForm(forms.ModelForm):
     """
 
     image = forms.ImageField(required=False)
-    labels = forms.CharField(required=False, widget=forms.Textarea)
+    labels = forms.CharField(required=False)
 
     class Meta:
         model = Item
         fields = ["name", "description", "location", "serial", "notes"]
         widgets = {"description": forms.TextInput(), "serial": forms.TextInput()}
+
+    def __init__(self, *args, **kwargs):
+        # Grab the labels
+        if kwargs.get("instance"):
+            initial = kwargs.setdefault("initial", {})
+            initial["labels"] = "\n".join(
+                l.name for l in kwargs["instance"].labels.order_by("name")
+            )
+        super().__init__(*args, **kwargs)
 
     def save_labels(self, instance):
         """
@@ -69,11 +78,10 @@ class BaseItemForm(forms.ModelForm):
         """
         wanted_label_names = set(
             line.strip()
-            for line in self.cleaned_data.get("labels", "").split("\n")
+            for line in self.cleaned_data.get("labels", "").replace(",", "\n").split("\n")
             if line.strip()
         )
-        wanted_labels = Label.objects.filter(name__in=wanted_label_names)
-        instance.labels.set(wanted_labels)
+        instance.labels.set(Label.get_with_names(wanted_label_names))
 
 
 class EditItemForm(BaseItemForm):

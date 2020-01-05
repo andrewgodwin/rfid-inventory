@@ -9,6 +9,7 @@ from django.views.generic import (
     FormView,
     ListView,
     UpdateView,
+    View,
 )
 
 from ..forms import LocationForm, ReparentForm
