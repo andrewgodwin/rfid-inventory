@@ -28,6 +28,9 @@
         <nav>
             <h2>Inventory</h2>
             <a href="/items/" class="{% if section == "items" %}selected{% endif %}">Items</a>
+            <h2>Checklists</h2>
+            <a href="/checklists/runs/" class="{% if section == "checklist_runs" %}selected{% endif %}">Runs</a>
+            <a href="/checklists/templates/" class="{% if section == "checklist_templates" %}selected{% endif %}">Templates</a>
             <h2>Settings</h2>
             <a href="/devices/" class="{% if section == "devices" %}selected{% endif %}">Devices</a>
             <a href="/labels/" class="{% if section == "labels" %}selected{% endif %}">Labels</a>

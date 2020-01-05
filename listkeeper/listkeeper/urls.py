@@ -16,6 +16,7 @@ Including another URLconf
 from django.contrib import admin, auth
 from django.urls import path
 
+from checklists.views import templates
 from directory.views import items, labels, locations
 from devices import api, views as devices
 
@@ -51,6 +52,12 @@ urlpatterns = [
     path("labels/create/", labels.CreateLabel.as_view()),
     path("labels/<int:pk>/edit/", labels.EditLabel.as_view()),
     path("labels/<int:pk>/delete/", labels.DeleteLabel.as_view()),
+    # Checklist templates
+    path("checklists/templates/", templates.ListTemplates.as_view()),
+    path("checklists/templates/create/", templates.CreateTemplate.as_view()),
+    path("checklists/templates/<int:pk>/", templates.ViewTemplate.as_view()),
+    path("checklists/templates/<int:pk>/edit/", templates.EditTemplate.as_view()),
+    path("checklists/templates/<int:pk>/delete/", templates.DeleteTemplate.as_view()),
     # API URLs
     path("api/device/sync/", api.sync),
     # Admin delegation

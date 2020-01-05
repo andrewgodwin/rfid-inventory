@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    <nav class="sub">
+        <a href="/checklists/templates/create/"><i class="fa fa-plus-square" aria-hidden="true"></i> Create Template</a>
+    </nav>
+
+    <table class="list">
+        <tr>
+            <th>Device</th>
+            <th>Mode</th>
+            <th>Location</th>
+            <th class="actions">Actions</th>
+        </tr>
+        {% for device in devices %}
+        <tr class="device">
+            <td class="name">
+                <a href="{{ device.urls.view }}">{{ device.name }}</a>
+                <small>{{ device.type }}</small>
+            </td>
+            <td class="mode">
+                {{ device.get_mode_display }}
+            </td>
+            <td class="location">
+                {% if device.location %}{{ device.location.name }}{% endif %}
+            </td>
+            <td class="actions">
+                <a href="{{ device.urls.view }}" title="View"><i class="fa fa-eye" aria-hidden="true"></i></a>
+                <a href="{{ device.urls.edit }}" title="Edit"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+            </td>
+        </tr>
+        {% empty %}
+            <tr class="empty"><td colspan="4">No devices yet.</td></tr>
+        {% endfor %}
+    </table>
+
+{% endblock content %}

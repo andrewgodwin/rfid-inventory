@@ -83,8 +83,8 @@ h1 {
     font-size: 30px;
     color: rgba(255, 255, 255, 1);
     padding: 10px 15px;
-    margin: 0;
-    border-radius: 3px 3px 0 0;
+    margin: 0 0 30px 0;
+    border-radius: 3px;
 }
     h1 small {
         font-size: 50%;
@@ -105,6 +105,7 @@ nav.sub {
     overflow: none;
 }
     h1 + nav.sub {
+        margin-top: -33px;
         border-radius: 0 0 3px 3px;
     }
     nav.sub a {
@@ -289,9 +290,6 @@ tr.item {
 
 /* Devices */
 
-tr.device {
-}
-
 span.token {
     padding: 3px 5px;
     border: 1px solid #ccc;
@@ -352,18 +350,6 @@ span.token {
 .reparent .new {
     font-weight: bold;
 }
-
-/* Generic list pages */
-
-.list-item {
-    padding: 10px 0 10px 15px;
-    border-bottom: 1px solid #ccc;
-}
-    .list-item small {
-        color: #555;
-        float: right;
-        margin: 0 15px 0 0;
-    }
 
 /* Login */
 
@@ -464,4 +450,40 @@ form {
     form .alert li {
         margin: 0 0 10px 0;
         padding: 0;
+    }
+
+/* Modals */
+
+.modal {
+  position: fixed;
+  z-index: 9998;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, .5);
+  display: table;
+  transition: opacity .3s ease;
+}
+    .modal .container {
+      width: 300px;
+      margin: 100px auto 0 auto;
+      padding: 15px 15px;
+      background-color: #fff;
+      border-radius: 2px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, .33);
+      transition: all .3s ease;
+      font-family: Helvetica, Arial, sans-serif;
+    }
+    .modal .close {
+        float: right;
+        font-size: 130%;
+        color: rgba(0, 0, 0, 0.3);
+    }
+    .modal-header h3 {
+      margin-top: 0;
+      color: #42b983;
+    }
+    .modal-body {
+      margin: 20px 0;
     }
