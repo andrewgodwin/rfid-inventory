@@ -34,15 +34,16 @@ class ViewLocation(LoginRequiredMixin, DetailView):
 class EditLocation(LoginRequiredMixin, UpdateView):
     model = Location
     form_class = LocationForm
-    template_name = "locations/edit.html"
-    extra_context = {"section": "locations"}
+    template_name = "generic/edit.html"
+    context_object_name = "obj"
+    extra_context = {"section": "locations", "noun": "location"}
 
 
 class CreateLocation(LoginRequiredMixin, CreateView):
     model = Location
     form_class = LocationForm
-    template_name = "locations/create.html"
-    extra_context = {"section": "locations"}
+    template_name = "generic/create.html"
+    extra_context = {"section": "locations", "noun": "location", "add_another": True}
 
     def get_success_url(self):
         if "add-another" in self.request.POST:
@@ -59,8 +60,10 @@ class CreateLocation(LoginRequiredMixin, CreateView):
 
 class DeleteLocation(LoginRequiredMixin, DeleteView):
     model = Location
-    template_name = "locations/delete.html"
+    template_name = "generic/delete.html"
     success_url = "/locations/"
+    context_object_name = "obj"
+    extra_context = {"section": "locations", "noun": "location"}
 
 
 class ReparentLocation(LoginRequiredMixin, FormView):

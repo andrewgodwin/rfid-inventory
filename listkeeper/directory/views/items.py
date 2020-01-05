@@ -32,15 +32,16 @@ class ViewItem(LoginRequiredMixin, DetailView):
 class EditItem(LoginRequiredMixin, UpdateView):
     model = Item
     form_class = EditItemForm
-    template_name = "items/edit.html"
-    extra_context = {"section": "items"}
+    template_name = "generic/edit.html"
+    context_object_name = "obj"
+    extra_context = {"section": "items", "noun": "item"}
 
 
 class CreateItem(LoginRequiredMixin, CreateView):
     model = Item
     form_class = CreateItemForm
-    template_name = "items/create.html"
-    extra_context = {"section": "items"}
+    template_name = "generic/create.html"
+    extra_context = {"section": "items", "noun": "item"}
 
     def get_initial(self):
         if "tag" in self.request.GET:
@@ -49,5 +50,7 @@ class CreateItem(LoginRequiredMixin, CreateView):
 
 class DeleteItem(LoginRequiredMixin, DeleteView):
     model = Item
-    template_name = "items/delete.html"
+    template_name = "generic/delete.html"
     success_url = "/items/"
+    context_object_name = "obj"
+    extra_context = {"section": "items", "noun": "item"}

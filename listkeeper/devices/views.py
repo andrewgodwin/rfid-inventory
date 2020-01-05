@@ -46,21 +46,24 @@ class ViewDevice(LoginRequiredMixin, DetailView):
 class EditDevice(LoginRequiredMixin, UpdateView):
     model = Device
     fields = ["name", "type", "location", "notes"]
-    template_name = "devices/edit.html"
-    extra_context = {"section": "devices"}
+    template_name = "generic/edit.html"
+    context_object_name = "obj"
+    extra_context = {"section": "devices", "noun": "device"}
 
 
 class CreateDevice(LoginRequiredMixin, CreateView):
     model = Device
     fields = ["name", "type", "location", "notes"]
-    template_name = "devices/create.html"
-    extra_context = {"section": "devices"}
+    template_name = "generic/create.html"
+    extra_context = {"section": "devices", "noun": "device"}
 
 
 class DeleteDevice(LoginRequiredMixin, DeleteView):
     model = Device
-    template_name = "devices/delete.html"
+    template_name = "generic/delete.html"
     success_url = "/devices/"
+    context_object_name = "obj"
+    extra_context = {"section": "devices", "noun": "device"}
 
 
 class SetDeviceMode(LoginRequiredMixin, DetailView):

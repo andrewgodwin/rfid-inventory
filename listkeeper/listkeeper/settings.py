@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     "django.contrib.humanize",
     "crispy_forms",
     "imagekit",
+    "checklists",
     "devices",
     "directory",
 ]

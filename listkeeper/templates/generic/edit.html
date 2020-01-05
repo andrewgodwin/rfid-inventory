@@ -1,12 +1,14 @@
 {% extends "base.html" %}
 {% load crispy_forms_tags %}
 
+{% block title %}Editing {{ obj.name }} - {% endblock %}
+
 {% block content %}
 
-    <h1>Editing: {{ item.name }}</h1>
+    <h1>Editing: {{ obj.name }}</h1>
 
     <section>
-        <form action="." method="POST" class="create create-item" enctype="multipart/form-data">
+        <form action="." method="POST" class="edit edit-{{ noun }}" enctype="multipart/form-data">
             {{ form|crispy }}
             {% csrf_token %}
             <a class="button cancel" href="javascript:history.back()">Cancel</a>

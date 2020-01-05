@@ -25,19 +25,21 @@ class ListLabels(LoginRequiredMixin, ListView):
 class EditLabel(LoginRequiredMixin, UpdateView):
     model = Label
     fields = ["name"]
-    template_name = "labels/edit.html"
-    extra_context = {"section": "labels"}
+    template_name = "generic/edit.html"
+    context_object_name = "obj"
+    extra_context = {"section": "labels", "noun": "label"}
 
 
 class CreateLabel(LoginRequiredMixin, CreateView):
     model = Label
     fields = ["name"]
-    template_name = "labels/create.html"
-    extra_context = {"section": "labels"}
+    template_name = "generic/create.html"
+    extra_context = {"section": "labels", "noun": "label"}
 
 
 class DeleteLabel(LoginRequiredMixin, DeleteView):
     model = Label
-    template_name = "labels/delete.html"
-    extra_context = {"section": "labels"}
+    template_name = "generic/delete.html"
     success_url = "/labels/"
+    context_object_name = "obj"
+    extra_context = {"section": "labels", "noun": "label"}

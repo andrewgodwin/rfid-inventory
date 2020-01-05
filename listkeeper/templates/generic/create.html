@@ -1,18 +1,18 @@
 {% extends "base.html" %}
 {% load crispy_forms_tags %}
 
-{% block title %}Create Location - {% endblock %}
+{% block title %}Create {{ noun.title }} - {% endblock %}
 
 {% block content %}
 
-    <h1>Create Location</h1>
+    <h1>Create {{ noun.title }}</h1>
 
     <section>
-        <form action="." method="POST" class="create create-location">
+        <form action="." method="POST" class="create create-{{ noun }}">
             {{ form|crispy }}
             {% csrf_token %}
             <div class="buttons">
-                <button name="add-another">Create &amp; Add Another</button>
+                {% if add_another %}<button name="add-another">Create &amp; Add Another</button>{% endif %}
                 <button>Create</button>
             </div>
         </form>
