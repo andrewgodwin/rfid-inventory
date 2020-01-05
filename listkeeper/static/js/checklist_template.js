@@ -43,6 +43,7 @@ var app = new Vue({
       this.currentItem.heading = true;
     },
 
+    // Adds the current edited item to the list
     addItem: function () {
       var value = this.currentItem.name && this.currentItem.name.trim()
       if (!value) {
@@ -51,10 +52,6 @@ var app = new Vue({
       this.items.push(this.currentItem);
       this.clearCurrent();
       this.showForm = false;
-    },
-
-    removeTodo: function (todo) {
-      this.todos.splice(this.todos.indexOf(todo), 1)
     },
   },
 
