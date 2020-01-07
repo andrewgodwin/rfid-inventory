@@ -20,7 +20,7 @@
         <tr class="item">
             <td class="image">
                 {% if item.image %}
-                    {% generateimage "thumbnail-small" source=item.image %}
+                    <img src="{{ item.image.small_thumbnail_url }}" width="50" height="50" />
                 {% else %}
                     <div class="no-image">?</div>
                 {% endif %}

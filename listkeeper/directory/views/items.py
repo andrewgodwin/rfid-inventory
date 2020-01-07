@@ -24,7 +24,7 @@ class ListItems(LoginRequiredMixin, ListView):
 
 
 class ViewItem(LoginRequiredMixin, DetailView):
-    model = Item
+    queryset = Item.objects.select_related("location").prefetch_related("labels", "images")
     template_name = "items/view.html"
     extra_context = {"section": "items"}
 

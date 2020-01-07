@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "django.contrib.humanize",
     "crispy_forms",
+    "debug_toolbar",
     "imagekit",
     "checklists",
     "devices",
@@ -49,6 +50,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    "debug_toolbar.middleware.DebugToolbarMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
@@ -76,6 +78,16 @@ TEMPLATES = [
         },
     }
 ]
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+    },
+    'database': {
+        'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
+        'LOCATION': 'django_cache',
+    }
+}
 
 WSGI_APPLICATION = "listkeeper.wsgi.application"
 ASGI_APPLICATION = "listkeeper.asgi.application"
@@ -129,6 +141,10 @@ STATIC_ROOT = os.path.join(BASE_DIR, "static-collected")
 STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
 
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+
+INTERNAL_IPS = [
+    '127.0.0.1',
+]
 
 # Local settings overrides
 try:

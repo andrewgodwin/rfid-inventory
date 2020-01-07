@@ -4,9 +4,13 @@ import string
 import uuid
 
 import urlman
+from imagekit.models import ImageSpecField
 
+from django.contrib.postgres.fields import JSONField
 from django.db import models
 from django.utils import functional, timezone
+
+from .imagegenerators import ThumbnailLargeSpec, ThumbnailSmallSpec
 
 
 class Tag(models.Model):
@@ -78,13 +82,13 @@ class Item(models.Model):
         """
         Returns a curated list of sightings
         """
-        return self.device_reads.order_by("-last_seen")[:5]
+        return self.device_reads.select_related("device").order_by("-last_seen")[:5]
 
     def recent_locations(self):
         """
         A short location history
         """
-        return self.location_histories.order_by("-timestamp")[:5]
+        return self.location_histories.select_related("location").order_by("-timestamp")[:5]
 
     def set_location(self, location):
         """
@@ -104,7 +108,7 @@ class Item(models.Model):
         Returns an image if there is one
         """
         if self.images.exists():
-            return self.images.all()[0].image
+            return self.images.all()[0]
         return None
 
 
@@ -127,7 +131,26 @@ class ItemImage(models.Model):
         "directory.Item", related_name="images", on_delete=models.CASCADE
     )
     image = models.ImageField(upload_to=image_upload_path)
+
+    image_small_thumbnail = ImageSpecField(source="image", spec=ThumbnailSmallSpec)
+    image_large_thumbnail = ImageSpecField(source="image", spec=ThumbnailLargeSpec)
+    image_urls = JSONField(blank=True, null=True)
+
     order = models.IntegerField(default=0)
+
+    def get_url(self, size):
+        self.image_urls = self.image_urls or {}
+        if size not in self.image_urls:
+            self.image_urls[size] = getattr(self, "image_%s" % size).url
+            self.save(update_fields=["image_urls"])
+        return self.image_urls[size]
+
+    def small_thumbnail_url(self):
+        return self.get_url("small_thumbnail")
+
+    def large_thumbnail_url(self):
+        return self.get_url("large_thumbnail")
+
 
 
 class Label(models.Model):

@@ -27,7 +27,7 @@
 
             {% if item.image %}
             <dt>Image</dt>
-            <dd><a href="{{ item.image.url }}">{% generateimage "thumbnail-large" source=item.image %}</a></dd>
+            <dd><a href="{{ item.image.image.url }}"><img src="{{ item.image.large_thumbnail_url }}"></a></dd>
             {% endif %}
 
             <dt>Location</dt>

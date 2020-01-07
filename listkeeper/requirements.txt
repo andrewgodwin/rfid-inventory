@@ -8,3 +8,4 @@ google-cloud-storage~=1.23.0
 django-imagekit~=4.0.2
 pillow~=6.2.1
 beautifulsoup4~=4.8.1
+django-debug-toolbar~=2.1
