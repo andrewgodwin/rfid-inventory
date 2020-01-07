@@ -131,6 +131,26 @@ nav.sub {
         color: rgba(255, 255, 255, 1);
         background: #fe8a71;
     }
+    nav.sub form {
+        width: 100%;
+    }
+    nav.sub .search {
+        float: right;
+        margin: 5px 0 0 20px;
+        padding: 3px;
+        width: 200px;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        color: white;
+        background: rgba(255, 255, 255, 0.1);
+        font-size: 100%;
+    }
+    nav.sub .search:focus {
+        border: 1px solid rgba(255, 255, 255, 0.6);
+        outline: none;
+    }
+    nav.sub .search::placeholder {
+        color: rgba(255, 255, 255, 0.6);
+    }
 
 table.list {
     width: 100%;

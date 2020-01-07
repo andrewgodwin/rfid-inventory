@@ -6,6 +6,7 @@
 
     <nav class="sub">
         <a href="/items/create/"><i class="fa fa-plus-square" aria-hidden="true"></i> Create Item</a>
+        <form action="."><input name="search" class="search" placeholder="Search" value="{{ search }}"></form>
     </nav>
 
     <table class="list">
@@ -56,7 +57,7 @@
             </td>
         </tr>
     {% empty %}
-        <tr class="empty"><td colspan="4">No items yet.</td></tr>
+        <tr class="empty"><td colspan="5">No items found.</td></tr>
     {% endfor %}
     </table>
 

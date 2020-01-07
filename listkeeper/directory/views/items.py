@@ -17,10 +17,23 @@ def index(request):
 
 
 class ListItems(LoginRequiredMixin, ListView):
-    queryset = Item.objects.select_related("location").prefetch_related("labels", "images").order_by("name")
     template_name = "items/list.html"
     context_object_name = "items"
     extra_context = {"section": "items"}
+
+    def get_queryset(self, *args, **kwargs):
+        qs = Item.objects.select_related("location").prefetch_related("labels", "images").order_by("name")
+        if "search" in self.request.GET:
+            qs = qs.filter(name__icontains=self.request.GET["search"])
+        if "location" in self.request.GET:
+            qs = qs.filter(location__name=self.request.GET["location"])
+        return qs
+
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        context["search"] = self.request.GET.get("search", "")
+        context["location"] = self.request.GET.get("location", "")
+        return context
 
 
 class ViewItem(LoginRequiredMixin, DetailView):
