@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% load humanize %}
+{% load static %}
+
+{% block extra_head %}
+    <script>
+        window.checklistData = {{ items_json|safe}};
+    </script>
+    <script defer src="{% static "js/checklist_run.js" %}" type="module"></script>
+{% endblock %}
+
+{% block content %}
+
+    <h1>
+        {{ run.name }}
+        <span class="ajax-status" v-if="state == 'saving'" v-cloak><i class="fa fa-refresh fa-spin" aria-hidden="true"></i> Saving...</span>
+        <span class="ajax-status" v-if="state == 'saved'" v-cloak><i class="fa fa-check" aria-hidden="true"></i> Saved</span>
+    </h1>
+
+    <nav class="sub sub-light">
+        <a><i class="fa fa-plus" aria-hidden="true"></i> Do Something</a>
+        <a href="{{ run.urls.delete }}" class="right dangerous"><i class="fa fa-trash" aria-hidden="true"></i> Delete</a>
+        <a href="{{ run.urls.edit }}" class="right"><i class="fa fa-pencil" aria-hidden="true"></i> Edit</a>
+    </nav>
+
+    {% csrf_token %}
+
+    {% verbatim %}
+
+    <div class="checklist-items checklist-run-items" v-cloak>
+        <div v-for="item in items" :key="item.id" :class="item.heading ? 'heading' : 'item'" @click="toggleItem(item)">
+            <template v-if="item.heading">
+                {{ item.name }}
+            </template>
+            <template v-else>
+                <div class="actions">
+                    <a title="Skip" @click.stop="skipItem(item)"><i class="fa fa-circle-o" aria-hidden="true"></i></a>
+                </div>
+                <div class="status checked" v-if="item.checked" title="Checked"><i class="fa fa-check" aria-hidden="true"></i></div>
+                <div class="status skipped" v-else-if="item.skipped" title="Skipped"><i class="fa fa-circle-o" aria-hidden="true"></i></div>
+                <div class="status unchecked" v-else title="Missing"><i class="fa fa-times" aria-hidden="true"></i></div>
+                <div class="name">
+                    {{ item.name }}
+                </div>
+                <div class="labels" v-if="item.labels &amp;&amp; !(item.checked || item.skipped)">
+                    <h4>Labels</h4>
+                    <span class="label" v-for="label in splitcomma(item.labels)">{{ label }}</span>
+                    <span class="quantity" v-if="item.quantity > 1">(x{{ item.quantity }})</span>
+                </div>
+            </template>
+        </div>
+    </div>
+    <div class="empty" v-if="items.length == 0">No items on this checklist yet.</div>
+
+    {% endverbatim %}
+
+{% endblock content %}

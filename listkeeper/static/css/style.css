@@ -370,6 +370,8 @@ span.token {
         margin: 0 0 10px 0;
         padding: 10px 10px;
         overflow: hidden;
+        cursor: pointer;
+        position: relative;
     }
     .checklist-items > div:hover {
         border: 1px solid rgba(0, 0, 0, 0.3);
@@ -395,8 +397,6 @@ span.token {
     .checklist-items .heading {
         background: rgba(0, 0, 0, 0.1);
         font-weight: normal;
-    }
-    .checklist-items .heading .name {
         font-size: 170%;
     }
     .checklist-items .heading h4 {
@@ -416,7 +416,46 @@ span.token {
     }
     .checklist-items .actions {
         float: right;
+        margin: -2px 0 -2px 0;
     }
+
+.checklist-run-items {
+}
+    .checklist-run-items > div.heading {
+        border: none;
+        margin: 20px 0 10px 0;
+        padding: 0 0;
+        background: none;
+        overflow: hidden;
+        cursor: none;
+        color: #222725;
+        font-size: 120%;
+        text-transform: uppercase;
+    }
+    .checklist-run-items > div.heading:hover {
+        border: none;
+    }
+    .checklist-run-items > div.item {
+        padding-left: 45px;
+    }
+    .checklist-run-items .status {
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        width: 15px;
+        padding: 10px;
+        background: #fe8a71;
+        text-align: center;
+        color: white;
+    }
+    .checklist-run-items .status.skipped {
+        background: #777;
+    }
+    .checklist-run-items .status.checked {
+        background: #3da4ab;
+    }
+
 
 /* Login */
 
@@ -482,6 +521,10 @@ form {
         width: 100%;
         padding: 5px;
         box-sizing: border-box;
+    }
+    form input[type=checkbox] {
+        width: auto;
+        margin: 0 5px 0 0;
     }
     form input::placeholder {
         color: rgba(0, 0, 0, 0.3);

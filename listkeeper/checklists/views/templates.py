@@ -59,6 +59,6 @@ class CreateTemplate(LoginRequiredMixin, CreateView):
 class DeleteTemplate(LoginRequiredMixin, DeleteView):
     model = Template
     context_object_name = "obj"
-    extra_context = {"section": "labels", "noun": "label"}
+    extra_context = {"section": "checklist_templates", "noun": "checklist template"}
     success_url = Template.urls.list
     template_name = "generic/delete.html"

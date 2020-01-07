@@ -13,7 +13,7 @@
             {% csrf_token %}
             <div class="buttons">
                 {% if add_another %}<button name="add-another">Create &amp; Add Another</button>{% endif %}
-                <button>Create</button>
+                {% if next %}<button>Next</button>{% else %}<button>Create</button>{% endif %}
             </div>
         </form>
     </section>

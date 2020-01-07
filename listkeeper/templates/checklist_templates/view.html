@@ -49,9 +49,9 @@
                     </div>
                 </div>
                 <div class="control-group" v-if="!currentItem.heading">
-                    <label for="item-question">Question</label>
+                    <label for="item-condition">Condition</label>
                     <div class="controls">
-                        <input v-model="currentItem.question" placeholder="Cold climate?" id="item-question" autocomplete="off" @keyup.enter="saveItem">
+                        <input v-model="currentItem.condition" placeholder="International" id="item-condition" autocomplete="off" @keyup.enter="saveItem">
                     </div>
                 </div>
                 <div class="control-group" v-if="!currentItem.heading">
@@ -68,8 +68,8 @@
     <draggable v-model="items" @start="dragStart" @end="dragStop" class="checklist-items" v-cloak>
         <div v-for="item in items" :key="item.id" :class="item.heading ? 'heading' : 'item'" @click="showEdit(item)">
             <div class="actions">
-                <a title="Edit" @click="showEdit(item)"><i class="fa fa-pencil" aria-hidden="true"></i></a>
-                <a title="Delete" @click="deleteItem(item)"><i class="fa fa-trash" aria-hidden="true"></i></a>
+                <a title="Edit" @click.stop="showEdit(item)"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+                <a title="Delete" @click.stop="deleteItem(item)"><i class="fa fa-trash" aria-hidden="true"></i></a>
             </div>
             <div class="name">
                 <h4 v-if="item.heading">Heading</h4>
@@ -81,9 +81,9 @@
                 <span class="label" v-for="label in splitcomma(item.labels)">{{ label }}</span>
                 <span class="quantity" v-if="item.quantity > 1">(x{{ item.quantity }})</span>
             </div>
-            <div class="question" v-if="!item.heading &amp;&amp; item.question">
-                <h4>Question</h4>
-                <span>{{ item.question }}</span>
+            <div class="condition" v-if="!item.heading &amp;&amp; item.condition">
+                <h4>Condition</h4>
+                <span>{{ item.condition }}</span>
             </div>
         </div>
     </draggable>

@@ -1,4 +1,3 @@
-import csrftoken from "./components/csrf.js";
 import modal from "./components/modal.js";
 
 var app = new Vue({
@@ -15,7 +14,6 @@ var app = new Vue({
     showForm: false,
     tempId: 1,
     dragging: false,
-    saving: false,
     state: null,
   },
 
@@ -37,7 +35,7 @@ var app = new Vue({
 
     // Clears the form to a default state
     clearCurrent: function () {
-      this.currentItem = {name: '', heading: false, quantity: 1, question: "", labels: ""};
+      this.currentItem = {name: '', heading: false, quantity: 1, condition: "", labels: ""};
     },
 
     // Shows the form in an "add" state

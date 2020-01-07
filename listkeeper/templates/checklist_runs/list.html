@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    <nav class="sub">
+        <a href="/checklists/runs/create/"><i class="fa fa-plus-square" aria-hidden="true"></i> Run Checklist</a>
+    </nav>
+
+    <table class="list">
+        <tr>
+            <th>Name</th>
+            <th>Template</th>
+            <th class="actions">Actions</th>
+        </tr>
+        {% for run in runs %}
+        <tr class="run">
+            <td class="name">
+                <a href="{{ run.urls.view }}">{{ run.name }}</a>
+            </td>
+            <td class="mode">
+                <a href="{{ run.template.urls.view }}">{{ run.template.name }}</a>
+            </td>
+            <td class="actions">
+                <a href="{{ run.urls.view }}" title="View"><i class="fa fa-eye" aria-hidden="true"></i></a>
+                <a href="{{ run.urls.delete }}" title="Delete"><i class="fa fa-trash" aria-hidden="true"></i></a>
+            </td>
+        </tr>
+        {% empty %}
+            <tr class="empty"><td colspan="4">No runs yet.</td></tr>
+        {% endfor %}
+    </table>
+
+{% endblock content %}
