@@ -19,10 +19,20 @@
     </h1>
 
     <nav class="sub sub-light">
-        <a><i class="fa fa-plus" aria-hidden="true"></i> Do Something</a>
+        <a href="{{ run.urls.setup_scan }}"><i class="fa fa-signal" aria-hidden="true"></i> Start scan</a>
         <a href="{{ run.urls.delete }}" class="right dangerous"><i class="fa fa-trash" aria-hidden="true"></i> Delete</a>
         <a href="{{ run.urls.edit }}" class="right"><i class="fa fa-pencil" aria-hidden="true"></i> Edit</a>
     </nav>
+
+    {% if run.locations.count %}
+    <div class="checklist-locations">
+        Scanning locations:
+        {% for location in run.locations.all %}
+            {% if forloop.last and forloop.counter > 1 %} and {% endif %}
+            <a href="{{ location.urls.view }}">{{ location }}</a>{% if not forloop.last and forloop.counter > 1 %},{% endif %}
+        {% endfor %}
+    </div>
+    {% endif %}
 
     {% csrf_token %}
 
@@ -47,6 +57,13 @@
                     <h4>Labels</h4>
                     <span class="label" v-for="label in splitcomma(item.labels)">{{ label }}</span>
                     <span class="quantity" v-if="item.quantity > 1">(x{{ item.quantity }})</span>
+                </div>
+                <div class="real-items" v-if="item.items &amp;&amp; item.checked">
+                    <h4>Items</h4>
+                    <span class="real-item" v-for="realItem in item.items">
+                        <a :href="realItem.url" @click.stop>{{ realItem.name }}</a>
+                        <span class="location">in {{ realItem.location }}</span>
+                    </span>
                 </div>
             </template>
         </div>

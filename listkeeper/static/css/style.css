@@ -362,6 +362,11 @@ span.token {
 
 /* Checklists */
 
+.checklist-locations {
+    color: rgba(0, 0, 0, 0.6);
+    font-style: italic;
+}
+
 .checklist-items {
 }
     .checklist-items > div {
@@ -417,6 +422,7 @@ span.token {
     .checklist-items .actions {
         float: right;
         margin: -2px 0 -2px 0;
+        font-size: 16px;
     }
 
 .checklist-run-items {
@@ -454,6 +460,13 @@ span.token {
     }
     .checklist-run-items .status.checked {
         background: #3da4ab;
+    }
+    .checklist-run-items .real-item {
+        display: block;
+        font-size: 90%;
+    }
+    .checklist-run-items .location {
+        font-size: 80%;
     }
 
 
@@ -506,6 +519,12 @@ form {
     }
     form .controls {
         margin: 5px 0 0 0;
+    }
+    form .controls label {
+        display: block;
+        color: black;
+        font-weight: normal;
+        margin: 0 0 5px 0;
     }
     form .controls .help-block {
         margin: 3px 0 0 0;

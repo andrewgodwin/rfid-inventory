@@ -65,6 +65,7 @@ urlpatterns = [
     path("checklists/runs/<int:pk>/post-create/", runs.PostCreateRun.as_view()),
     path("checklists/runs/<int:pk>/edit/", runs.EditRun.as_view()),
     path("checklists/runs/<int:pk>/delete/", runs.DeleteRun.as_view()),
+    path("checklists/runs/<int:pk>/setup-scan/", runs.SetupScan.as_view()),
     # API URLs
     path("api/device/sync/", api.sync),
     # Admin delegation

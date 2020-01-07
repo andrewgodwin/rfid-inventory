@@ -7,11 +7,13 @@ from django.views.generic import (
     CreateView,
     DeleteView,
     DetailView,
+    FormView,
     ListView,
     UpdateView,
 )
 
-from ..forms import RunForm
+from devices.models import Device
+from ..forms import RunForm, SetupScanForm
 from ..models import Run
 
 
@@ -74,3 +76,32 @@ class DeleteRun(LoginRequiredMixin, DeleteView):
     extra_context = {"section": "checklist_runs", "noun": "checklist run"}
     success_url = Run.urls.list
     template_name = "generic/delete.html"
+
+
+class SetupScan(LoginRequiredMixin, FormView):
+    """
+    Wizard to assign a location to a device, this run, and to turn the device to
+    associate mode.
+    """
+    form_class = SetupScanForm
+    template_name = "checklist_runs/setup_scan.html"
+    extra_context = {"section": "checklist_runs"}
+
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        context["run"] = Run.objects.get(pk=self.kwargs['pk'])
+        return context
+
+    def form_valid(self, form):
+        run = Run.objects.get(pk=self.kwargs['pk'])
+        device = form.cleaned_data["device"]
+        location = form.cleaned_data["location"]
+        # Assign the location to us
+        run.locations.add(location)
+        # Find all devices with that location currently and turn off association
+        Device.objects.filter(location=location).update(mode="passive")
+        # Assign it to the device and put it into association mode
+        device.location = location
+        device.mode = "assigning"
+        device.save()
+        return redirect(run.urls.view)

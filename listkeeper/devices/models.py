@@ -48,7 +48,7 @@ class Device(models.Model):
         add_random_write = "{view}add-random-write/"
 
     def __str__(self):
-        return "#%s: %s" % (self.id, self.name)
+        return self.name
 
     def get_absolute_url(self):
         return self.urls.view

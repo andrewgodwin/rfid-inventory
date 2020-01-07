@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% load humanize %}
+{% load static %}
+
+{% block content %}
+
+    <h1>Start scan for {{ run.name }}</h1>
+
+    <section>
+        <form action="." method="POST" class="create create-{{ noun }}">
+            {{ form|crispy }}
+            {% csrf_token %}
+            <div class="buttons">
+                <button>Start</button>
+            </div>
+        </form>
+    </section>
+
+{% endblock content %}

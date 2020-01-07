@@ -94,6 +94,9 @@ class Item(models.Model):
             self.location_histories.create(location=location, timestamp=timezone.now())
             self.location = location
             self.save(update_fields=["location"])
+        # Always try to update Runs even if it's not different
+        for checklist_run in location.checklist_runs.all():
+            checklist_run.match_item(self)
 
     @functional.cached_property
     def image(self):

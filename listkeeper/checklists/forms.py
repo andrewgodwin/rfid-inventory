@@ -2,6 +2,8 @@ import hashlib
 
 from django import forms
 
+from directory.models import Location
+from devices.models import Device
 from .models import Template, Run
 
 
@@ -12,7 +14,10 @@ class RunForm(forms.ModelForm):
 
     class Meta:
         model = Run
-        fields = ["name", "template"]
+        fields = ["name", "template", "locations"]
+        widgets = {
+            "locations": forms.CheckboxSelectMultiple(),
+        }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -27,7 +32,6 @@ class RunForm(forms.ModelForm):
                 )
 
     def save(self, *args, **kwargs):
-        kwargs["commit"] = False
         instance = super().save(*args, **kwargs)
         instance.conditions = []
         for condition in instance.template.conditions:
@@ -39,3 +43,12 @@ class RunForm(forms.ModelForm):
     def condition_field_name(self, condition):
         hash_value = hashlib.md5(condition.encode("utf8")).hexdigest()
         return "condition_%s" % hash_value
+
+
+class SetupScanForm(forms.Form):
+    """
+    Allows users to set up a scan to add things to a checklist.
+    """
+
+    location = forms.ModelChoiceField(Location.objects.all())
+    device = forms.ModelChoiceField(Device.objects.all())
