@@ -77,6 +77,7 @@ var app = new Vue({
         this.items.push(this.currentItem);
         this.clearCurrent();
         this.showForm = false;
+        this.$refs.bottomBar.scrollIntoView();
       }
     },
 
@@ -115,6 +116,13 @@ var app = new Vue({
 
   mounted: function () {
     this.clearCurrent();
+    window.addEventListener("keyup", e => {
+      if (e.code == "KeyI" && !this.showForm) {
+        this.showAdd();
+      } else if (e.code == "KeyH" && !this.showForm) {
+        this.showAddHeading();
+      }
+    });
   }
 
 })
