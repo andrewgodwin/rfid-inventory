@@ -1,31 +1,43 @@
-import Modal from "./components/modal.js";
+import csrftoken from "./components/csrf.js";
+import modal from "./components/modal.js";
 
 var app = new Vue({
   components: {
-    Modal,
+    modal,
+    vuedraggable,
   },
 
   // app initial state
   data: {
-    items: [{name: "Heading", heading: true}, {name: "Item"}],
-    currentItem: {name: '', heading: false},
-    showForm: false
+    items: window.checklistData,
+    lastReceived: null,
+    currentItem: null,
+    showForm: false,
+    tempId: 1,
+    dragging: false,
+    saving: false,
+    state: null,
   },
 
   // Save items whenever they change
   watch: {
     items: {
       handler: function (items) {
-        // save items here
+        this.debouncedSave();
       },
       deep: true
     }
   },
 
   methods: {
+    // Splits comma-separated strings
+    splitcomma: function (value) {
+      return value.split(",");
+    },
+
     // Clears the form to a default state
     clearCurrent: function () {
-      this.currentItem = {name: '', heading: false};
+      this.currentItem = {name: '', heading: false, quantity: 1, question: "", labels: ""};
     },
 
     // Shows the form in an "add" state
@@ -43,16 +55,64 @@ var app = new Vue({
       this.currentItem.heading = true;
     },
 
+    // Shows the form in an "edit" state
+    showEdit: function (item) {
+      this.currentItem = item;
+      this.showForm = true;
+      this.$nextTick(() => {
+       this.$refs.itemName.focus();
+      })
+    },
+
     // Adds the current edited item to the list
-    addItem: function () {
+    saveItem: function () {
       var value = this.currentItem.name && this.currentItem.name.trim()
       if (!value) {
         return
       }
-      this.items.push(this.currentItem);
-      this.clearCurrent();
-      this.showForm = false;
+      // See if it's a new one or an existing one
+      if (this.currentItem.id) {
+        this.clearCurrent();
+        this.showForm = false;
+      } else {
+        this.currentItem.id = "temp-" + (this.tempId++);
+        this.items.push(this.currentItem);
+        this.clearCurrent();
+        this.showForm = false;
+      }
     },
+
+    // Deletes an item
+    deleteItem: function(item) {
+      this.items.splice(this.items.indexOf(item), 1);
+    },
+
+    // Called when drag starts, suppresses saves
+    dragStart: function () {
+      this.dragging = true;
+    },
+
+    // Called when drag ends, force-triggers save
+    dragStop: function () {
+      this.dragging = false;
+      this.debouncedSave();
+    },
+
+    // Sends the current value of items to the backend
+    save: function() {
+      if (!this.dragging && !_.isEqual(this.items, this.lastReceived)) {
+        this.state = "saving";
+        axios.post(".", {items: this.items},  {xsrfCookieName: "csrftoken", xsrfHeaderName: "X-CSRFToken"}).then((response) => {
+          this.state = "saved";
+          this.lastReceived = response.data.items;
+          this.items = _.cloneDeep(response.data.items);
+        });
+      }
+    }
+  },
+
+  created: function () {
+    this.debouncedSave = _.debounce(this.save, 500);
   },
 
   mounted: function () {
@@ -62,7 +122,7 @@ var app = new Vue({
 })
 
 // Mount to element
-app.$mount('#template-editor')
+app.$mount('.content')
 
 // Debugging
 window.app = app;

@@ -3,8 +3,13 @@ export default {
   template: `
     <div class="modal" @keyup.esc="$emit('close')">
         <div class="container">
-            <a href="#" @click="$emit('close')" class="close"><i class="fa fa-times" aria-hidden="true"></i></a>
-            <slot name="content"></slot>
+            <h3>
+                <slot name="header-text"></slot>
+                <a href="#" @click="$emit('close')" class="close"><i class="fa fa-times" aria-hidden="true"></i></a>
+            </h3>
+            <div class="content">
+                <slot name="content"></slot>
+            </div>
         </div>
     </div>
   `,

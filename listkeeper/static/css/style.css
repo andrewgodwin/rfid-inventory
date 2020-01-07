@@ -12,8 +12,12 @@ body {
 a {
     text-decoration: none;
     color: #4193B2;
+    cursor: pointer;
 }
 
+[v-cloak] {
+    display: none;
+}
 
 /* Specific styles */
 /* #4a4e4d • #12919D • #3da4ab • #f6cd61 • #fe8a71 */
@@ -136,6 +140,9 @@ table.list {
     table.list tr:nth-child(n+2) {
         border-bottom: 1px solid rgba(0, 0, 0, 0.1);
     }
+    table.list tbody tr {
+        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    }
     table.list th {
         color: #ccc;
         text-transform: uppercase;
@@ -163,7 +170,8 @@ table.list {
         text-align: right;
         padding-right: 0;
     }
-    table.list td.actions a {
+    table.list td.actions a,
+    .checklist-items .actions a {
         color: rgba(0, 0, 0, 0.5);
         font-size: 120%;
         padding: 5px;
@@ -171,7 +179,8 @@ table.list {
         border-radius: 3px;
         margin-right: -4px;
     }
-    table.list td.actions a:hover {
+    table.list td.actions a:hover,
+    .checklist-items .actions a:hover {
         border: 1px solid #12919D;
         color: #12919D;
     }
@@ -351,6 +360,64 @@ span.token {
     font-weight: bold;
 }
 
+/* Checklists */
+
+.checklist-items {
+}
+    .checklist-items > div {
+        border: 1px solid rgba(0, 0, 0, 0.1);
+        border-radius: 3px;
+        margin: 0 0 10px 0;
+        padding: 10px 10px;
+        overflow: hidden;
+    }
+    .checklist-items > div:hover {
+        border: 1px solid rgba(0, 0, 0, 0.3);
+    }
+    .checklist-items h4 {
+        margin: 0 0 2px 0;
+        padding: 0;
+        font-size: 55%;
+        color: rgba(0, 0, 0, 0.5);
+        text-transform: uppercase;
+    }
+    .checklist-items .name {
+        float: left;
+        width: 300px;
+    }
+    .checklist-items .labels {
+        float: left;
+        margin-right: 30px;
+    }
+    .checklist-items .question {
+        float: left;
+    }
+    .checklist-items .heading {
+        background: rgba(0, 0, 0, 0.1);
+        font-weight: normal;
+    }
+    .checklist-items .heading .name {
+        font-size: 170%;
+    }
+    .checklist-items .heading h4 {
+        font-size: 40%;
+    }
+    .checklist-items .quantity {
+        font-size: 90%;
+        color: rgba(0, 0, 0, 0.7);
+    }
+    .checklist-items .label {
+        margin: 0 5px 0 0;
+        padding: 2px 5px;
+        background: #3da4ab;
+        color: white;
+        border-radius: 3px;
+        font-size: 80%;
+    }
+    .checklist-items .actions {
+        float: right;
+    }
+
 /* Login */
 
 div.login {
@@ -381,12 +448,18 @@ div.login {
 form {
     width: 600px;
 }
+    form.small {
+        width: 100%;
+    }
     form .control-group {
         margin: 0 0 15px 0;
     }
     form label {
         color: #0e9aa7;
         font-weight: bold;
+    }
+    form.small label {
+        font-size: 90%;
     }
     form label .asteriskField {
         padding-left: 3px;
@@ -410,6 +483,9 @@ form {
         padding: 5px;
         box-sizing: border-box;
     }
+    form input::placeholder {
+        color: rgba(0, 0, 0, 0.3);
+    }
     form textarea {
         font-size: 100%;
         font-family: inherit;
@@ -418,7 +494,7 @@ form {
         line-height: 115%;
         box-sizing: border-box;
     }
-    form button,
+    button,
     form .button {
         background: #3da4ab;
         color: #fff;
@@ -455,35 +531,53 @@ form {
 /* Modals */
 
 .modal {
-  position: fixed;
-  z-index: 9998;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, .5);
-  display: table;
-  transition: opacity .3s ease;
+    position: fixed;
+    z-index: 9998;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, .5);
+    display: table;
+    transition: opacity .3s ease;
 }
     .modal .container {
-      width: 300px;
-      margin: 100px auto 0 auto;
-      padding: 15px 15px;
-      background-color: #fff;
-      border-radius: 2px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, .33);
-      transition: all .3s ease;
-      font-family: Helvetica, Arial, sans-serif;
+        width: 500px;
+        margin: 100px auto 0 auto;
+        padding: 0;
+        background-color: #fff;
+        border-radius: 2px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, .33);
+        transition: all .3s ease;
+        font-family: Helvetica, Arial, sans-serif;
+    }
+    .modal h3 {
+        background: #12919D;
+        color: white;
+        margin: 0 0 5px 0;
+        padding: 10px 15px;
+        line-height: 1.4em;
+        font-size: 110%;
     }
     .modal .close {
         float: right;
         font-size: 130%;
-        color: rgba(0, 0, 0, 0.3);
+        color: rgba(255, 255, 255, 0.7);
     }
-    .modal-header h3 {
-      margin-top: 0;
-      color: #42b983;
+    .modal .content {
+        margin: 0;
+        padding: 15px 15px;
     }
-    .modal-body {
-      margin: 20px 0;
+
+/* Loading/saving spinners */
+
+.ajax-status {
+    float: right;
+    font-size: 16px;
+    font-weight: normal;
+    margin: 0 0 0 10px;
+}
+    .ajax-status i {
+        display: inline-block;
+        margin-right: 3px;
     }

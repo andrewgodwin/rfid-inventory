@@ -4,43 +4,91 @@
 {% load static %}
 
 {% block extra_head %}
+    <script>
+        window.checklistData = {{ items_json|safe}};
+    </script>
     <script defer src="{% static "js/checklist_template.js" %}" type="module"></script>
 {% endblock %}
 
 {% block content %}
 
-    <h1>{{ template.name }}</h1>
+    <h1>
+        {{ template.name }}
+        <span class="ajax-status" v-if="state == 'saving'"><i class="fa fa-refresh fa-spin" aria-hidden="true"></i> Saving...</span>
+        <span class="ajax-status" v-if="state == 'saved'"><i class="fa fa-check" aria-hidden="true"></i> Saved</span>
+    </h1>
 
     <nav class="sub sub-light">
+        <a @click="showAdd"><i class="fa fa-plus" aria-hidden="true"></i> Add Item</a>
+        <a @click="showAddHeading"><i class="fa fa-plus" aria-hidden="true"></i> Add Heading</a>
         <a href="{{ template.urls.delete }}" class="right dangerous"><i class="fa fa-trash" aria-hidden="true"></i> Delete</a>
-        <a href="{{ template.urls.edit }}" class="right"><i class="fa fa-pencil" aria-hidden="true"></i> Edit</a>
+        <a href="{{ template.urls.edit }}" class="right"><i class="fa fa-pencil" aria-hidden="true"></i> Edit Name</a>
     </nav>
 
+    {% csrf_token %}
+
     {% verbatim %}
-    <div id="template-editor">
-        <div class="actions">
-            <button @click="showAdd">Add Item</button>
-            <button @click="showAddHeading">Add Heading</button>
+
+    <modal v-if="showForm" @close="showForm = false" v-cloak>
+        <span slot="header-text">
+            <span v-if="currentItem.heading">Add Heading</span>
+            <span v-else>Add Item</span>
+        </span>
+        <div slot="content">
+            <form v-on:submit.prevent class="small">
+                <div class="control-group">
+                    <label for="item-name">Name</label>
+                    <div class="controls">
+                        <input v-model="currentItem.name" ref="itemName" id="item-name" autocomplete="off" @keyup.enter="saveItem">
+                    </div>
+                </div>
+                <div class="control-group" v-if="!currentItem.heading">
+                    <label for="item-labels">Labels</label>
+                    <div class="controls">
+                        <input v-model="currentItem.labels" placeholder="label-one, label-two" id="item-labels" autocomplete="off" @keyup.enter="saveItem">
+                    </div>
+                </div>
+                <div class="control-group" v-if="!currentItem.heading">
+                    <label for="item-question">Question</label>
+                    <div class="controls">
+                        <input v-model="currentItem.question" placeholder="Cold climate?" id="item-question" autocomplete="off" @keyup.enter="saveItem">
+                    </div>
+                </div>
+                <div class="control-group" v-if="!currentItem.heading">
+                    <label for="item-quantity">Quantity Required</label>
+                    <div class="controls">
+                        <input v-model="currentItem.quantity" type="number" id="item-quantity" @keyup.enter="saveItem">
+                    </div>
+                </div>
+                <button @click="saveItem">Save</button>
+            </form>
         </div>
-        <modal v-if="showForm" @close="showForm = false">
-            <div slot="content">
-                <input v-model="currentItem.name" ref="itemName" placeholder="Item name" autocomplete="off" @keyup.enter="addItem">
-                <input v-model="currentItem.heading" type="checkbox">
-                <button @click="addItem">Save</button>
+    </modal>
+
+    <draggable v-model="items" @start="dragStart" @end="dragStop" class="checklist-items" v-cloak>
+        <div v-for="item in items" :key="item.id" :class="item.heading ? 'heading' : 'item'" @click="showEdit(item)">
+            <div class="actions">
+                <a title="Edit" @click="showEdit(item)"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+                <a title="Delete" @click="deleteItem(item)"><i class="fa fa-trash" aria-hidden="true"></i></a>
             </div>
-        </modal>
-        <table class="list">
-            <tr>
-                <th>Item</th>
-            </tr>
-            <tr v-for="item in items">
-                <td>
-                    <b v-if="item.heading">{{ item.name }}</b>
-                    <span v-else>{{ item.name }}</span>
-                </td>
-            </tr>
-        </table>
-    </div>
+            <div class="name">
+                <h4 v-if="item.heading">Heading</h4>
+                <h4 v-else>Item</h4>
+                {{ item.name }}
+            </div>
+            <div class="labels" v-if="!item.heading &amp;&amp; item.labels">
+                <h4>Labels</h4>
+                <span class="label" v-for="label in splitcomma(item.labels)">{{ label }}</span>
+                <span class="quantity" v-if="item.quantity > 1">(x{{ item.quantity }})</span>
+            </div>
+            <div class="question" v-if="!item.heading &amp;&amp; item.question">
+                <h4>Question</h4>
+                <span>{{ item.question }}</span>
+            </div>
+        </div>
+    </draggable>
+    <div class="empty" v-if="items.length == 0">No items on this checklist yet.</div>
+
     {% endverbatim %}
 
 {% endblock content %}

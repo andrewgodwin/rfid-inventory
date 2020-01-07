@@ -8,30 +8,25 @@
 
     <table class="list">
         <tr>
-            <th>Device</th>
-            <th>Mode</th>
-            <th>Location</th>
+            <th>Template</th>
+            <th>Items</th>
             <th class="actions">Actions</th>
         </tr>
-        {% for device in devices %}
-        <tr class="device">
+        {% for template in templates %}
+        <tr class="template">
             <td class="name">
-                <a href="{{ device.urls.view }}">{{ device.name }}</a>
-                <small>{{ device.type }}</small>
+                <a href="{{ template.urls.view }}">{{ template.name }}</a>
             </td>
             <td class="mode">
-                {{ device.get_mode_display }}
-            </td>
-            <td class="location">
-                {% if device.location %}{{ device.location.name }}{% endif %}
+                {{ template.items.count }}
             </td>
             <td class="actions">
-                <a href="{{ device.urls.view }}" title="View"><i class="fa fa-eye" aria-hidden="true"></i></a>
-                <a href="{{ device.urls.edit }}" title="Edit"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+                <a href="{{ template.urls.view }}" title="View"><i class="fa fa-eye" aria-hidden="true"></i></a>
+                <a href="{{ template.urls.view }}" title="Edit"><i class="fa fa-pencil" aria-hidden="true"></i></a>
             </td>
         </tr>
         {% empty %}
-            <tr class="empty"><td colspan="4">No devices yet.</td></tr>
+            <tr class="empty"><td colspan="4">No templates yet.</td></tr>
         {% endfor %}
     </table>
 
