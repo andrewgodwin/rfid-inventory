@@ -10,6 +10,7 @@ from django.views.generic import (
     FormView,
     ListView,
     UpdateView,
+    View,
 )
 
 from devices.models import Device
@@ -104,4 +105,20 @@ class SetupScan(LoginRequiredMixin, FormView):
         device.location = location
         device.mode = "assigning"
         device.save()
+        return redirect(run.urls.view)
+
+
+class StopScan(LoginRequiredMixin, View):
+    """
+    Removes location assignment from the run and disables
+    assignment mode on devices.
+    """
+
+    def get(self, *args, **kwargs):
+        # Get run
+        run = Run.objects.get(pk=self.kwargs['pk'])
+        # Go through all devices with our locations and turn off association
+        Device.objects.filter(location__in=run.locations.all()).update(mode="passive")
+        # Remove all locations
+        run.locations.clear()
         return redirect(run.urls.view)

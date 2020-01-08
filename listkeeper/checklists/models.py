@@ -143,6 +143,7 @@ class Run(models.Model):
         edit = "{view}edit/"
         delete = "{view}delete/"
         setup_scan = "{view}setup-scan/"
+        stop_scan = "{view}stop-scan/"
 
     def __str__(self):
         return self.name
@@ -196,7 +197,11 @@ class Run(models.Model):
         """
         Returns our items in a standard JSON format the frontend understands
         """
-        return [item.to_json() for item in self.run_items.select_related("template_item").prefetch_related("items").order_by("template_item__order")]
+        return [
+            item.to_json()
+            for item in
+            self.run_items.select_related("template_item").prefetch_related("items", "items__location").order_by("template_item__order")
+        ]
 
     def save_items_json(self, json_items):
         """
