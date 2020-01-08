@@ -52,6 +52,7 @@
                 <div class="status unchecked" v-else title="Missing"><i class="fa fa-times" aria-hidden="true"></i></div>
                 <div class="name">
                     {{ item.name }}
+                    <p class="description" v-if="item.description">{{ item.description }}</p>
                 </div>
                 <div class="labels" v-if="item.labels &amp;&amp; !(item.checked || item.skipped)">
                     <h4>Labels</h4>

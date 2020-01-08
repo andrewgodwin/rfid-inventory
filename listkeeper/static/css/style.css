@@ -401,6 +401,9 @@ span.token {
     .checklist-items > div:hover {
         border: 1px solid rgba(0, 0, 0, 0.3);
     }
+    .checklist-items > div.selected {
+        border: 1px solid rgba(0, 0, 0, 0.8);
+    }
     .checklist-items h4 {
         margin: 0 0 2px 0;
         padding: 0;
@@ -443,6 +446,12 @@ span.token {
         float: right;
         margin: -2px 0 -2px 0;
         font-size: 16px;
+    }
+    .checklist-items .description {
+        margin: 3px 0 0 0;
+        padding: 0;
+        font-size: 90%;
+        color: rgba(0, 0, 0, 0.6);
     }
 
 .checklist-run-items {

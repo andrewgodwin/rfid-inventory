@@ -35,7 +35,7 @@ var app = new Vue({
 
     // Clears the form to a default state
     clearCurrent: function () {
-      this.currentItem = {name: '', heading: false, quantity: 1, condition: "", labels: ""};
+      this.currentItem = {name: '', heading: false, quantity: 1, condition: "", labels: "", description: ""};
     },
 
     // Shows the form in an "add" state
