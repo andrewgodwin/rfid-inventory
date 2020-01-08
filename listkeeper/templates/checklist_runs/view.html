@@ -54,12 +54,12 @@
                     {{ item.name }}
                     <p class="description" v-if="item.description">{{ item.description }}</p>
                 </div>
-                <div class="labels" v-if="item.labels &amp;&amp; !(item.checked || item.skipped)">
+                <div class="labels" v-if="item.labels.length > 0  &amp;&amp; !(item.checked || item.skipped)">
                     <h4>Labels</h4>
                     <span class="label" v-for="label in splitcomma(item.labels)">{{ label }}</span>
                     <span class="quantity" v-if="item.quantity > 1">(x{{ item.quantity }})</span>
                 </div>
-                <div class="real-items" v-if="item.items &amp;&amp; item.checked">
+                <div class="real-items" v-if="item.items.length > 0 &amp;&amp; item.checked">
                     <h4>Items</h4>
                     <span class="real-item" v-for="realItem in item.items">
                         <a :href="realItem.url" @click.stop>{{ realItem.name }}</a>

@@ -419,7 +419,8 @@ span.token {
         float: left;
         margin-right: 30px;
     }
-    .checklist-items .question {
+    .checklist-items .question,
+    .checklist-items .real-items {
         float: left;
     }
     .checklist-items .heading {

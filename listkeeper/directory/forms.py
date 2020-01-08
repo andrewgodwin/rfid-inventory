@@ -1,6 +1,9 @@
-from django import forms
+import requests
 
-from .models import Item, Label, Location
+from django import forms
+from django.core.files.base import ContentFile
+
+from .models import Item, ItemImage, Label, Location
 
 
 class LocationForm(forms.ModelForm):
@@ -56,6 +59,7 @@ class BaseItemForm(forms.ModelForm):
     """
 
     image = forms.ImageField(required=False)
+    image_url = forms.CharField(required=False)
     labels = forms.CharField(required=False)
 
     class Meta:
@@ -82,6 +86,25 @@ class BaseItemForm(forms.ModelForm):
             if line.strip()
         )
         instance.labels.set(Label.get_with_names(wanted_label_names))
+
+    def save_image(self, instance):
+        """
+        Saves an image provided as an upload or URL
+        """
+        if self.cleaned_data.get("image_url"):
+            # Download the image and work out a filename
+            image_content = ContentFile(requests.get(self.cleaned_data["image_url"]).content)
+            image_filename = self.cleaned_data["image_url"].split("/")[-1].strip()
+            if not image_filename.strip() or "." not in image_filename:
+                image_filename = "url-%s.jpg" % instance.id
+            # Save it
+            instance.images.all().delete()
+            item_image = ItemImage(item=instance)
+            item_image.image.save(image_filename, image_content)
+            item_image.save()
+        elif self.cleaned_data.get("image"):
+            instance.images.all().delete()
+            instance.images.create(image=self.cleaned_data["image"])
 
 
 class EditItemForm(BaseItemForm):
@@ -115,9 +138,7 @@ class EditItemForm(BaseItemForm):
             instance.tags.filter(id=removed_tag).delete()
             DeviceRead.objects.filter(tag=removed_tag).update(item=None)
         # Handle the image
-        if self.cleaned_data["image"]:
-            instance.images.all().delete()
-            instance.images.create(image=self.cleaned_data["image"])
+        self.save_image(instance)
         # Handle labels
         self.save_labels(instance)
         return instance
@@ -138,8 +159,7 @@ class CreateItemForm(BaseItemForm):
             instance.tags.create(id=self.cleaned_data["tag"])
             DeviceRead.objects.filter(tag=self.cleaned_data["tag"]).update(item=instance)
         # And an image
-        if self.cleaned_data["image"]:
-            instance.images.create(image=self.cleaned_data["image"])
+        self.save_image(instance)
         # And labels
         self.save_labels(instance)
         return instance

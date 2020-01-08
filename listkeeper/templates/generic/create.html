@@ -8,7 +8,7 @@
     <h1>Create {{ noun.title }}</h1>
 
     <section>
-        <form action="." method="POST" class="create create-{{ noun }}">
+        <form action="." method="POST" class="create create-{{ noun }}" enctype="multipart/form-data">
             {{ form|crispy }}
             {% csrf_token %}
             <div class="buttons">

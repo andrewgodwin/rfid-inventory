@@ -9,7 +9,7 @@ var deviceViewApp = new Vue({
             fetch('.?patch=1').then(function (response) {
                 response.json().then(function (data) {
                     Object.keys(data).forEach(function (entryId) {
-                        $("#" + entryId).html(data[entryId]);
+                        document.getElementById(entryId).innerHTML = data[entryId];
                     });
                 });
             });
