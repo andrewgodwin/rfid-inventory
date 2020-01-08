@@ -15,6 +15,7 @@ var app = new Vue({
     tempId: 1,
     dragging: false,
     state: null,
+    insertIndex: null,
   },
 
   // Save items whenever they change
@@ -39,12 +40,13 @@ var app = new Vue({
     },
 
     // Shows the form in an "add" state
-    showAdd: function () {
+    showAdd: function (index) {
       this.clearCurrent();
       this.showForm = true;
       this.$nextTick(() => {
        this.$refs.itemName.focus();
       })
+      this.insertIndex = index;
     },
 
     // Shows the form in an "add" state with the heading
@@ -74,10 +76,16 @@ var app = new Vue({
         this.showForm = false;
       } else {
         this.currentItem.id = "temp-" + (this.tempId++);
-        this.items.push(this.currentItem);
+        if (this.insertIndex) {
+          this.items.splice(this.insertIndex + 1, 0, this.currentItem);
+        } else {
+          this.items.push(this.currentItem);
+        }
         this.clearCurrent();
         this.showForm = false;
-        this.$refs.bottomBar.scrollIntoView();
+        if (!this.insertIndex) {
+          this.$refs.bottomBar.scrollIntoView();
+        }
       }
     },
 

@@ -72,8 +72,9 @@
     </modal>
 
     <draggable v-model="items" @start="dragStart" @end="dragStop" class="checklist-items" multiDrag="true" selectedClass="selected" v-cloak>
-        <div v-for="item in items" :key="item.id" :class="item.heading ? 'heading' : 'item'" @dblclick="showEdit(item)">
+        <div v-for="(item, index) in items" :key="item.id" :class="item.heading ? 'heading' : 'item'" @dblclick="showEdit(item)">
             <div class="actions">
+                <a title="Add Item" @click.stop="showAdd(index)" v-if="item.heading"><i class="fa fa-plus" aria-hidden="true"></i></a>
                 <a title="Edit" @click.stop="showEdit(item)"><i class="fa fa-pencil" aria-hidden="true"></i></a>
                 <a title="Delete" @click.stop="deleteItem(item)"><i class="fa fa-trash" aria-hidden="true"></i></a>
             </div>
