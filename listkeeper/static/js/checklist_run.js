@@ -8,7 +8,7 @@ var app = new Vue({
   // app initial state
   data: {
     items: window.checklistData,
-    lastReceived: null,
+    serverItems: null,
     state: null,
   },
 
@@ -46,21 +46,52 @@ var app = new Vue({
       item.checked = false;
     },
 
-    // Sends the current value of items to the backend
-    save: function() {
-      if (!this.dragging && !_.isEqual(this.items, this.lastReceived)) {
+    // Saves state to the backend
+    save: function () {
+      // Is there a change to save?
+      if (!_.isEqual(this.items, this.serverItems) && this.state != "saving" && this.state != "loading") {
         this.state = "saving";
         axios.post(".", {items: this.items},  {xsrfCookieName: "csrftoken", xsrfHeaderName: "X-CSRFToken"}).then((response) => {
           this.state = "saved";
-          this.lastReceived = response.data.items;
-          this.items = _.cloneDeep(response.data.items);
-        });
+          this.serverItems = _.cloneDeep(this.items);
+          this.load();
+        }).catch((error) => {
+          // handle error
+          console.log("Save error: " + error);
+        });;
       }
+    },
+
+    // Loads state from the backend
+    load: function () {
+      if (this.state == "saving" || this.state == "loading") return;
+      // Try saving
+      this.save();
+      // OK, just load
+      this.state = "loading";
+      axios.get("json/").then((response) => {
+        this.state = "";
+        // See if they changed the content while we were loading
+        if (!_.isEqual(this.items, this.serverItems)) {
+          this.save();
+        } else {
+          this.serverItems = _.cloneDeep(response.data.items);
+          this.items = response.data.items;
+        }
+      }).catch((error) => {
+        // handle error
+        console.log("Load error: " + error);
+      });;
     }
   },
 
   created: function () {
     this.debouncedSave = _.debounce(this.save, 500);
+  },
+
+  mounted: function () {
+    this.serverItems = _.cloneDeep(this.items);
+    window.setInterval(this.load, 5000);
   },
 
 })

@@ -15,6 +15,7 @@
     <h1>
         {{ template.name }}
         <span class="ajax-status" v-if="state == 'saving'"><i class="fa fa-refresh fa-spin" aria-hidden="true"></i> Saving...</span>
+        <span class="ajax-status" v-if="state == 'loading'"><i class="fa fa-refresh fa-spin" aria-hidden="true"></i> Loading...</span>
         <span class="ajax-status" v-if="state == 'saved'"><i class="fa fa-check" aria-hidden="true"></i> Saved</span>
     </h1>
 

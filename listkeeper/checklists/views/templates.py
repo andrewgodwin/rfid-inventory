@@ -22,9 +22,17 @@ class ListTemplates(LoginRequiredMixin, ListView):
 
 
 class ViewTemplate(LoginRequiredMixin, DetailView):
+    json = False
     model = Template
     template_name = "checklist_templates/view.html"
     extra_context = {"section": "checklist_templates"}
+
+    def get(self, *args, **kwargs):
+        if self.json:
+            obj = self.get_object()
+            return JsonResponse({"items": obj.items_json()})
+        else:
+            return super().get(*args, **kwargs)
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
@@ -38,7 +46,7 @@ class ViewTemplate(LoginRequiredMixin, DetailView):
         obj = self.get_object()
         data = json.loads(request.body)
         obj.save_items_json(data["items"])
-        return JsonResponse({"items": obj.items_json()})
+        return JsonResponse({"ok": True})
 
 
 class EditTemplate(LoginRequiredMixin, UpdateView):

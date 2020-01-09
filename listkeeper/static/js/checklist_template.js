@@ -9,7 +9,7 @@ var app = new Vue({
   // app initial state
   data: {
     items: window.checklistData,
-    lastReceived: null,
+    serverItems: null,
     currentItem: null,
     showForm: false,
     tempId: 1,
@@ -105,16 +105,47 @@ var app = new Vue({
       this.debouncedSave();
     },
 
-    // Sends the current value of items to the backend
-    save: function() {
-      if (!this.dragging && !_.isEqual(this.items, this.lastReceived)) {
+    // Saves state to the backend
+    save: function () {
+      // Is there a change to save?
+      if (!_.isEqual(this.items, this.serverItems) && this.state != "saving" && this.state != "loading") {
+        console.log("Saving")
         this.state = "saving";
         axios.post(".", {items: this.items},  {xsrfCookieName: "csrftoken", xsrfHeaderName: "X-CSRFToken"}).then((response) => {
+          console.log("Saved");
           this.state = "saved";
-          this.lastReceived = response.data.items;
-          this.items = _.cloneDeep(response.data.items);
+          this.serverItems = _.cloneDeep(this.items);
+          this.load();
+        }).catch((error) => {
+          // handle error
+          console.log("Save error: " + error);
         });
       }
+    },
+
+    // Loads state from the backend
+    load: function () {
+      if (this.state == "saving" || this.state == "loading") return;
+      // Try saving
+      this.save();
+      // OK, just load
+      this.state = "loading";
+      console.log("Loading")
+      axios.get("json/").then((response) => {
+        this.state = "";
+        // See if they changed the content while we were loading
+        if (!_.isEqual(this.items, this.serverItems)) {
+          console.log("Loading cancelled, save needed");
+          this.save();
+        } else {
+          console.log("Loaded");
+          this.serverItems = _.cloneDeep(response.data.items);
+          this.items = response.data.items;
+        }
+      }).catch((error) => {
+        // handle error
+        console.log("Load error: " + error);
+      });;
     }
   },
 
@@ -123,6 +154,7 @@ var app = new Vue({
   },
 
   mounted: function () {
+    this.serverItems = _.cloneDeep(this.items);
     this.clearCurrent();
     window.addEventListener("keyup", e => {
       if (e.code == "KeyI" && !this.showForm) {
@@ -131,6 +163,7 @@ var app = new Vue({
         this.showAddHeading();
       }
     });
+    window.setInterval(this.load, 10000);
   }
 
 })

@@ -26,6 +26,38 @@ class ListRuns(LoginRequiredMixin, ListView):
 
 
 class ViewRun(LoginRequiredMixin, DetailView):
+    json = False
+    model = Run
+    template_name = "checklist_runs/view.html"
+    extra_context = {"section": "checklist_runs"}
+
+    def get(self, *args, **kwargs):
+        if self.json:
+            obj = self.get_object()
+            return JsonResponse({"items": obj.items_json()})
+        else:
+            return super().get(*args, **kwargs)
+
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        context["items_json"] = json.dumps(self.object.items_json())
+        return context
+
+    def post(self, request, *args, **kwargs):
+        """
+        Called to save the data
+        """
+        obj = self.get_object()
+        data = json.loads(request.body)
+        obj.save_items_json(data["items"])
+        return JsonResponse({"ok": True})
+
+
+class ViewRunAPI(LoginRequiredMixin, DetailView):
+    """
+    Returns current Run status as JSON
+    """
+
     model = Run
     template_name = "checklist_runs/view.html"
     extra_context = {"section": "checklist_runs"}
