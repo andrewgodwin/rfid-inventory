@@ -10,6 +10,7 @@ var app = new Vue({
     items: window.checklistData,
     serverItems: null,
     state: null,
+    filter: null,
   },
 
   // Save items whenever they change
@@ -19,6 +20,16 @@ var app = new Vue({
         this.debouncedSave();
       },
       deep: true
+    }
+  },
+
+  computed: {
+    filteredItems: function () {
+      if (this.filter == "unchecked") {
+        return this.items.filter((item) => { return item.checked == false && item.skipped == false; });
+      } else {
+        return this.items;
+      }
     }
   },
 
@@ -88,7 +99,7 @@ var app = new Vue({
   },
 
   created: function () {
-    this.debouncedSave = _.debounce(this.save, 500);
+    this.debouncedSave = _.debounce(this.save, 2000);
   },
 
   mounted: function () {
