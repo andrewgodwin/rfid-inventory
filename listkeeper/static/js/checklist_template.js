@@ -109,10 +109,8 @@ var app = new Vue({
     save: function () {
       // Is there a change to save?
       if (!_.isEqual(this.items, this.serverItems) && this.state != "saving" && this.state != "loading") {
-        console.log("Saving")
         this.state = "saving";
         axios.post(".", {items: this.items},  {xsrfCookieName: "csrftoken", xsrfHeaderName: "X-CSRFToken"}).then((response) => {
-          console.log("Saved");
           this.state = "saved";
           this.serverItems = _.cloneDeep(this.items);
           this.load();
@@ -130,7 +128,6 @@ var app = new Vue({
       this.save();
       // OK, just load
       this.state = "loading";
-      console.log("Loading")
       axios.get("json/").then((response) => {
         this.state = "";
         // See if they changed the content while we were loading
@@ -138,9 +135,10 @@ var app = new Vue({
           console.log("Loading cancelled, save needed");
           this.save();
         } else {
-          console.log("Loaded");
-          this.serverItems = _.cloneDeep(response.data.items);
-          this.items = response.data.items;
+          if (!_.isEqual(this.items, response.data.items)) {
+            this.serverItems = _.cloneDeep(response.data.items);
+            this.items = response.data.items;
+          }
         }
       }).catch((error) => {
         // handle error

@@ -75,8 +75,10 @@ var app = new Vue({
         if (!_.isEqual(this.items, this.serverItems)) {
           this.save();
         } else {
-          this.serverItems = _.cloneDeep(response.data.items);
-          this.items = response.data.items;
+          if (!_.isEqual(this.items, response.data.items)) {
+            this.serverItems = _.cloneDeep(response.data.items);
+            this.items = response.data.items;
+          }
         }
       }).catch((error) => {
         // handle error
