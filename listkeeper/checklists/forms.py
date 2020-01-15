@@ -14,7 +14,7 @@ class RunForm(forms.ModelForm):
 
     class Meta:
         model = Run
-        fields = ["name", "template", "locations"]
+        fields = ["name", "template"]
         widgets = {
             "locations": forms.CheckboxSelectMultiple(),
         }

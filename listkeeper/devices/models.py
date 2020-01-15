@@ -64,7 +64,7 @@ class Device(models.Model):
         """
         Returns a QuerySet of "recent" device reads to show in the UI
         """
-        return self.reads.order_by("-last_seen")[:20]
+        return self.reads.order_by("-last_seen", "tag")[:20]
 
 
 class DeviceRead(models.Model):
