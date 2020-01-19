@@ -24,7 +24,7 @@ def sync(request):
     except Device.DoesNotExist:
         return JsonResponse({"error": "Invalid token"}, status=400)
     # Handle any RFID tags it's seen
-    update_reads(device, data.get("tags", []))
+    reads = update_reads(device, data.get("tags", []))
     # Handle any writes
     update_writes(device, data.get("written", []))
     # Ping that we saw it
@@ -41,6 +41,7 @@ def update_reads(device, tag_values):
     """
     Updates the device's DeviceRead objects with the new tags seen.
     """
+    result = {}
     seen_time = timezone.now()
     tag_values = set(tag_values)
     # For each tag, update its record
@@ -63,6 +64,7 @@ def update_reads(device, tag_values):
         # See if we can associate it with an item
         if read.directory_tag and read.directory_tag.item:
             read.item = read.directory_tag.item
+            result[tag_value] = read.item.name
             # And see if we're in location-assigning mode!
             if device.mode == "assigning" and device.location:
                 read.item.set_location(device.location)
@@ -71,6 +73,7 @@ def update_reads(device, tag_values):
     DeviceRead.objects.filter(
         device=device, last_seen__lt=seen_time, present=True
     ).update(present=False)
+    return result
 
 
 def update_writes(device, tag_values):
