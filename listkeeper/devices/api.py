@@ -34,7 +34,7 @@ def sync(request):
     if device.writes.exists():
         write = device.writes.order_by("created")[0].tag
     # Send back a mode
-    return JsonResponse({"mode": "passive", "write": write})
+    return JsonResponse({"mode": "passive", "write": write, "tag_names": reads})
 
 
 def update_reads(device, tag_values):
