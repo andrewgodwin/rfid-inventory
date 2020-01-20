@@ -2,10 +2,17 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
     <EditTextPreference
-        android:defaultValue="Default value"
+        android:defaultValue="https://inventory.aeracode.org/api/device/sync/"
+        android:key="apiUrl"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        android:summary="Full address of endpoint"
+        android:title="API URL" />
+    <EditTextPreference
+        android:defaultValue=""
         android:key="token"
         android:selectAllOnFocus="true"
         android:singleLine="true"
-        android:summary="Required to send to the API"
+        android:summary="Authentication token for this device"
         android:title="API Token" />
 </PreferenceScreen>

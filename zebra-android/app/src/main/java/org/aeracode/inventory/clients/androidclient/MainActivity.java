@@ -1,6 +1,7 @@
 package org.aeracode.inventory.clients.androidclient;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -9,11 +10,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import com.zebra.rfid.api3.TagData;
@@ -48,6 +52,10 @@ public class MainActivity extends AppCompatActivity implements RFIDHandler.Respo
         // RFID Handler
         rfidHandler = new RFIDHandler();
         rfidHandler.onCreate(this);
+
+        // Settings
+        android.support.v7.preference.PreferenceManager
+                .setDefaultValues(this, R.xml.preferences, false);
     }
 
     @Override
@@ -101,20 +109,36 @@ public class MainActivity extends AppCompatActivity implements RFIDHandler.Respo
             sb.append(tagData[index].getTagID() + "\n");
             seenTags.add("epc:" + tagData[index].getTagID());
         }
+        final String tagsText = seenTags.size() + " tags";
 
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 textrfid.setText(sb.toString());
+                tagStatus.setText(tagsText);
             }
         });
     }
 
     public void scanFinished() {
+        // Get token
+        SharedPreferences sharedPref =
+                android.support.v7.preference.PreferenceManager
+                        .getDefaultSharedPreferences(this);
+        String token = sharedPref.getString("token", "");
+        if (token.length() < 1) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    textrfid.setText("No token set");
+                }
+            });
+            return;
+        }
         // Create JSON body
         JSONObject postBody = new JSONObject();
         try {
-            postBody.put("token", "fake");
+            postBody.put("token", token);
             postBody.put("tags", new JSONArray(seenTags));
         } catch (final JSONException e) {
             runOnUiThread(new Runnable() {
@@ -126,8 +150,9 @@ public class MainActivity extends AppCompatActivity implements RFIDHandler.Respo
             return;
         }
         // Send to server
+        JSONObject tagNames;
         try {
-            URL url = new URL("https://inventory.aeracode.org/api/device/sync/");
+            URL url = new URL(sharedPref.getString("apiUrl", "https://inventory.aeracode.org/api/device/sync/"));
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("POST");
             conn.setRequestProperty("Content-Type", "application/json;charset=UTF-8");
@@ -139,8 +164,42 @@ public class MainActivity extends AppCompatActivity implements RFIDHandler.Respo
                 os.write(input, 0, input.length);
             }
             Log.i("STATUS", String.valueOf(conn.getResponseCode()));
-            Log.i("MSG" , conn.getResponseMessage());
+            // Read response
+            BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+            StringBuilder rsb = new StringBuilder();
+            String line;
+            while ((line = br.readLine()) != null) {
+                rsb.append(line + "\n");
+            }
+            br.close();
             conn.disconnect();
+            JSONObject responseJson = new JSONObject(rsb.toString());
+            tagNames = responseJson.getJSONObject("tag_names");
+
+            // Show number of tags
+            final String tagsText = seenTags.size() + " tags";
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    tagStatus.setText(tagsText);
+                }
+            });
+
+            // Show tag list
+            final StringBuilder sb = new StringBuilder();
+            for (String tag : seenTags) {
+                if (tagNames != null && tagNames.has(tag)) {
+                    sb.append(tagNames.getString(tag) + " (" + tag + ")\n");
+                } else {
+                    sb.append(tag + "\n");
+                }
+            }
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    textrfid.setText(sb.toString());
+                }
+            });
         } catch (final IOException e) {
             runOnUiThread(new Runnable() {
                 @Override
@@ -149,26 +208,15 @@ public class MainActivity extends AppCompatActivity implements RFIDHandler.Respo
                 }
             });
             return;
+        } catch (final JSONException e) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    textrfid.setText("Response parse error: " + e);
+                }
+            });
+            return;
         }
-        // Show on UI
-        final String tagsText = seenTags.size() + " tags";
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                tagStatus.setText(tagsText);
-            }
-        });
-
-        final StringBuilder sb = new StringBuilder();
-        for (String tag : seenTags) {
-            sb.append(tag + "\n");
-        }
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                textrfid.setText(sb.toString());
-            }
-        });
 
         // Wipe set
         seenTags.clear();
