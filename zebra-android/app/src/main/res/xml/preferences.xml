@@ -15,9 +15,12 @@
         android:singleLine="true"
         android:summary="Authentication token for this device"
         android:title="API Token" />
-    <SwitchPreferenceCompat
-        android:defaultValue="true"
-        android:key="highPower"
-        android:title="High power" />
+    <ListPreference
+        android:defaultValue="250"
+        android:key="powerLevel"
+        android:summary="%s"
+        android:entries="@array/powerLevelNames"
+        android:entryValues="@array/powerLevelValues"
+        android:title="Power Level" />
 
 </PreferenceScreen>

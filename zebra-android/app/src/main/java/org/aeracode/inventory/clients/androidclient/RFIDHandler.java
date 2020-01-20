@@ -263,8 +263,8 @@ class RFIDHandler implements Readers.RFIDReaderEventHandler {
                 // set antenna configurations
                 Antennas.AntennaRfConfig config = reader.Config.Antennas.getAntennaRfConfig(1);
                 SharedPreferences sharedPref = android.support.v7.preference.PreferenceManager.getDefaultSharedPreferences(context);
-                boolean highPower = sharedPref.getBoolean("highPower", true);
-                config.setTransmitPowerIndex(highPower ? MAX_POWER : MAX_POWER / 2);
+                String powerLevel = sharedPref.getString("powerLevel", "250");
+                config.setTransmitPowerIndex(Integer.parseInt(powerLevel));
                 config.setrfModeTableIndex(0);
                 config.setTari(0);
                 reader.Config.Antennas.setAntennaRfConfig(1, config);
