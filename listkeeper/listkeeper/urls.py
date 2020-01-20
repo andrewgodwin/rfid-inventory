@@ -48,6 +48,7 @@ urlpatterns = [
     path("locations/<int:pk>/", locations.ViewLocation.as_view()),
     path("locations/<int:pk>/edit/", locations.EditLocation.as_view()),
     path("locations/<int:pk>/delete/", locations.DeleteLocation.as_view()),
+    path("locations/<int:pk>/clear/", locations.ClearLocation.as_view()),
     # Labels
     path("labels/", labels.ListLabels.as_view()),
     path("labels/create/", labels.CreateLabel.as_view()),

@@ -232,6 +232,7 @@ class Location(models.Model):
         view = "{list}{self.id}/"
         edit = "{view}edit/"
         delete = "{view}delete/"
+        clear = "{view}clear/"
         items = "/items/?location={self.name}"
 
     def __str__(self):

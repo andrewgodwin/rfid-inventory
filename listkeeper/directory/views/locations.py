@@ -105,3 +105,16 @@ class ReparentLocation(LoginRequiredMixin, FormView):
             )
         results.sort()
         return results
+
+
+class ClearLocation(LoginRequiredMixin, View):
+    """
+    Removes all items from this location.
+    """
+
+    def get(self, *args, **kwargs):
+        # Get location
+        location = Location.objects.get(pk=self.kwargs['pk'])
+        # Go through all items in that location and remove them from it
+        location.items.update(location=None)
+        return redirect(location.urls.view)
