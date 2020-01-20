@@ -33,7 +33,7 @@
                 {% if read.item %}
                     <a href="{{ read.item.urls.view }}">{{ read.item.name }} <small>{{ read.tag }}</small></a>
                 {% else %}
-                    <a href="/items/create/?tag={{ read.tag }}">{{ read.tag }} <small>(no item)</small></a>
+                    <a href="/items/create/?tag={{ read.tag }}" target="_blank">{{ read.tag }} <small>(no item)</small></a>
                 {% endif %}
                 {% if read.present %}
                     <span class="present">
