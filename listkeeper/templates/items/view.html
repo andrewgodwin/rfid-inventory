@@ -5,6 +5,8 @@
 {% load static %}
 {% load imagekit %}
 
+{% block title %}{{ item.name }} - Items - {% endblock %}
+
 {% block content %}
 
     <h1>{{ item.name }} <small>Item #{{ item.id }}</small></h1>

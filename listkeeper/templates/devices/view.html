@@ -7,6 +7,9 @@
     <script defer src="{% static "js/device_view.js" %}"></script>
 {% endblock %}
 
+{% block title %}{{ device.name }} - Devices -{% endblock %}
+
+
 {% block content %}
 
     <h1>{{ device.name }} <small>Device #{{ device.id }}</small></h1>
