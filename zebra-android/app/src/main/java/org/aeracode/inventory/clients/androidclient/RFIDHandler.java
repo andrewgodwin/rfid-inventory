@@ -1,5 +1,6 @@
 package org.aeracode.inventory.clients.androidclient;
 
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.TextView;
@@ -261,7 +262,9 @@ class RFIDHandler implements Readers.RFIDReaderEventHandler {
                 MAX_POWER = reader.ReaderCapabilities.getTransmitPowerLevelValues().length - 1;
                 // set antenna configurations
                 Antennas.AntennaRfConfig config = reader.Config.Antennas.getAntennaRfConfig(1);
-                config.setTransmitPowerIndex(MAX_POWER);
+                SharedPreferences sharedPref = android.support.v7.preference.PreferenceManager.getDefaultSharedPreferences(context);
+                boolean highPower = sharedPref.getBoolean("highPower", true);
+                config.setTransmitPowerIndex(highPower ? MAX_POWER : MAX_POWER / 2);
                 config.setrfModeTableIndex(0);
                 config.setTari(0);
                 reader.Config.Antennas.setAntennaRfConfig(1, config);

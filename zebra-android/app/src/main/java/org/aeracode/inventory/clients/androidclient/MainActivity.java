@@ -1,5 +1,6 @@
 package org.aeracode.inventory.clients.androidclient;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -8,6 +9,8 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import java.io.BufferedReader;
@@ -16,7 +19,11 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -29,12 +36,13 @@ import org.json.JSONObject;
 public class MainActivity extends AppCompatActivity implements RFIDHandler.ResponseHandlerInterface {
 
     public TextView readerStatus = null;
-    private TextView textrfid;
+    private ListView tagList;
     private TextView testStatus;
     private TextView tagStatus;
 
     RFIDHandler rfidHandler;
     private Set<String> seenTags = new HashSet<String>();
+    private List<String> displayedTags = new ArrayList<String>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,17 +54,35 @@ public class MainActivity extends AppCompatActivity implements RFIDHandler.Respo
         // UI
         readerStatus = findViewById(R.id.readerStatus);
         tagStatus = findViewById(R.id.tagStatus);
-        textrfid = findViewById(R.id.textViewdata);
         testStatus = findViewById(R.id.testStatus);
+
+        tagList = findViewById(R.id.tagList);
+        final ArrayAdapter adapter = new ArrayAdapter(this,
+                android.R.layout.simple_list_item_1, displayedTags);
+        tagList.setAdapter(adapter);
 
         // RFID Handler
         rfidHandler = new RFIDHandler();
         rfidHandler.onCreate(this);
 
         // Settings
-        android.support.v7.preference.PreferenceManager
-                .setDefaultValues(this, R.xml.preferences, false);
+        android.support.v7.preference.PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
     }
+
+    public static final Comparator<String> TagComparator = new Comparator<String>(){
+
+        @Override
+        public int compare(String s1, String s2) {
+            if (s1.startsWith("epc:")) {
+                s1 = "zzzz" + s1;
+            }
+            if (s2.startsWith("epc:")) {
+                s2 = "zzzz" + s2;
+            }
+            return s1.compareToIgnoreCase(s2);
+        }
+
+    };
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -110,14 +136,13 @@ public class MainActivity extends AppCompatActivity implements RFIDHandler.Respo
             seenTags.add("epc:" + tagData[index].getTagID());
         }
         final String tagsText = seenTags.size() + " tags";
-
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                textrfid.setText(sb.toString());
                 tagStatus.setText(tagsText);
             }
         });
+
     }
 
     public void scanFinished() {
@@ -130,7 +155,7 @@ public class MainActivity extends AppCompatActivity implements RFIDHandler.Respo
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    textrfid.setText("No token set");
+                    tagStatus.setText("No token set");
                 }
             });
             return;
@@ -144,7 +169,7 @@ public class MainActivity extends AppCompatActivity implements RFIDHandler.Respo
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    textrfid.setText("JSON error: " + e);
+                    tagStatus.setText("JSON error: " + e);
                 }
             });
             return;
@@ -186,25 +211,29 @@ public class MainActivity extends AppCompatActivity implements RFIDHandler.Respo
             });
 
             // Show tag list
-            final StringBuilder sb = new StringBuilder();
+            //final StringBuilder sb = new StringBuilder();
+            displayedTags.clear();
             for (String tag : seenTags) {
                 if (tagNames != null && tagNames.has(tag)) {
-                    sb.append(tagNames.getString(tag) + " (" + tag + ")\n");
+                    displayedTags.add(tagNames.getString(tag));
+                    //sb.append(tagNames.getString(tag) + " (" + tag + ")\n");
                 } else {
-                    sb.append(tag + "\n");
+                    //sb.append(tag + "\n");
+                    displayedTags.add(tag);
                 }
             }
+            displayedTags.sort(TagComparator);
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    textrfid.setText(sb.toString());
+                    ((ArrayAdapter) tagList.getAdapter()).notifyDataSetChanged();
                 }
             });
         } catch (final IOException e) {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    textrfid.setText("URL error: " + e);
+                    tagStatus.setText("URL error: " + e);
                 }
             });
             return;
@@ -212,7 +241,7 @@ public class MainActivity extends AppCompatActivity implements RFIDHandler.Respo
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    textrfid.setText("Response parse error: " + e);
+                    tagStatus.setText("Response parse error: " + e);
                 }
             });
             return;
@@ -225,12 +254,6 @@ public class MainActivity extends AppCompatActivity implements RFIDHandler.Respo
     @Override
     public void handleTriggerPress(boolean pressed) {
         if (pressed) {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    textrfid.setText("");
-                }
-            });
             rfidHandler.performInventory();
         } else {
             rfidHandler.stopInventory();
