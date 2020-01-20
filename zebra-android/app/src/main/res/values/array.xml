@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="powerLevelNames">
+        <item>Low (150)</item>
+        <item>Medium (200)</item>
+        <item>High (250)</item>
+        <item>Max (300)</item>
+    </string-array>
+
+    <string-array name="powerLevelValues">
+        <item>150</item>
+        <item>200</item>
+        <item>250</item>
+        <item>300</item>
+    </string-array>
+
+</resources>
