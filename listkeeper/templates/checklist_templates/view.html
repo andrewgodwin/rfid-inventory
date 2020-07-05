@@ -22,7 +22,7 @@
     </h1>
 
     <nav class="sub sub-light">
-        <a @click="showAdd"><i class="fa fa-plus" aria-hidden="true"></i> Add Item</a>
+        <a @click="showAdd(0)"><i class="fa fa-plus" aria-hidden="true"></i> Add Item</a>
         <a @click="showAddHeading"><i class="fa fa-plus" aria-hidden="true"></i> Add Heading</a>
         <a href="{{ template.urls.delete }}" class="right dangerous"><i class="fa fa-trash" aria-hidden="true"></i> Delete</a>
         <a href="{{ template.urls.edit }}" class="right"><i class="fa fa-pencil" aria-hidden="true"></i> Edit Name</a>
@@ -103,7 +103,7 @@
     {% endverbatim %}
 
     <nav class="sub sub-light" ref="bottomBar">
-        <a @click="showAdd"><i class="fa fa-plus" aria-hidden="true"></i> Add Item</a>
+        <a @click="showAdd(-1)"><i class="fa fa-plus" aria-hidden="true"></i> Add Item</a>
         <a @click="showAddHeading"><i class="fa fa-plus" aria-hidden="true"></i> Add Heading</a>
     </nav>
 

@@ -36,7 +36,7 @@ var app = new Vue({
 
     // Clears the form to a default state
     clearCurrent: function () {
-      this.currentItem = {name: '', heading: false, quantity: 1, condition: "", labels: "", description: ""};
+      this.currentItem = { name: '', heading: false, quantity: 1, condition: "", labels: "", description: "" };
     },
 
     // Shows the form in an "add" state
@@ -44,7 +44,7 @@ var app = new Vue({
       this.clearCurrent();
       this.showForm = true;
       this.$nextTick(() => {
-       this.$refs.itemName.focus();
+        this.$refs.itemName.focus();
       })
       this.insertIndex = index;
     },
@@ -60,7 +60,7 @@ var app = new Vue({
       this.currentItem = item;
       this.showForm = true;
       this.$nextTick(() => {
-       this.$refs.itemName.focus();
+        this.$refs.itemName.focus();
       })
     },
 
@@ -76,7 +76,7 @@ var app = new Vue({
         this.showForm = false;
       } else {
         this.currentItem.id = "temp-" + (this.tempId++);
-        if (this.insertIndex) {
+        if (this.insertIndex >= 0) {
           this.items.splice(this.insertIndex + 1, 0, this.currentItem);
         } else {
           this.items.push(this.currentItem);
@@ -90,7 +90,7 @@ var app = new Vue({
     },
 
     // Deletes an item
-    deleteItem: function(item) {
+    deleteItem: function (item) {
       this.items.splice(this.items.indexOf(item), 1);
     },
 
@@ -110,7 +110,7 @@ var app = new Vue({
       // Is there a change to save?
       if (!_.isEqual(this.items, this.serverItems) && this.state != "saving" && this.state != "loading") {
         this.state = "saving";
-        axios.post(".", {items: this.items},  {xsrfCookieName: "csrftoken", xsrfHeaderName: "X-CSRFToken"}).then((response) => {
+        axios.post(".", { items: this.items }, { xsrfCookieName: "csrftoken", xsrfHeaderName: "X-CSRFToken" }).then((response) => {
           this.state = "saved";
           this.serverItems = _.cloneDeep(this.items);
           this.load();
